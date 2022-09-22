@@ -29,7 +29,7 @@ fun isNumberHappy(number: Int): Boolean {
     val lastNumber = number % 100
     val n3 = lastNumber / 10
     val n4 = lastNumber % 10
-    return if ((n1 + n2) == (n3 + n4)) true else false
+    return ((n1 + n2) == (n3 + n4))
 }
 /**
  * Простая (2 балла)

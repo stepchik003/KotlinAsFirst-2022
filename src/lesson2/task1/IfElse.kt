@@ -72,7 +72,7 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String {
-    val d = age%10
+    val d = age % 10
     return when {
         d == 1 && age != 11 && age != 111 -> "$age год"
         d in 2..4 && age !in 12..14 && age !in 112..114 -> "$age года"
@@ -96,17 +96,14 @@ fun timeForHalfWay(
     val s2 = t2 * v2
     val s3 = t3 * v3
     val s = s1 + s2 + s3
-    val hW = s/2
+    val hW = s / 2
     if (hW < s1) {
-        return (hW/v1)
-    }
-    else if (hW in s1..(s1+s2)) {
-        return (t1 + (hW - s1)/v2)
-    }
-    else if(hW in (s1+s2)..s) {
-        return (t1 + t2 + (hW - s1 - s2)/v3)
-    }
-    else {
+        return (hW / v1)
+    } else if (hW in s1..(s1 + s2)) {
+        return (t1 + (hW - s1) / v2)
+    } else if (hW in (s1 + s2)..s) {
+        return (t1 + t2 + (hW - s1 - s2) / v3)
+    } else {
         return 0.0
     }
 }
@@ -125,11 +122,14 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    return when {
-        ((rookX1 == kingX && rookY1 != kingY) || ((rookX1 != kingX && rookY1 == kingY))) && ((rookX2 == kingX && rookY2 != kingY) || ((rookX2 != kingX && rookY2 == kingY))) -> 3
-        ((rookX1 == kingX && rookY1 != kingY) || ((rookX1 != kingX && rookY1 == kingY))) -> 1
-        ((rookX2 == kingX && rookY2 != kingY) || ((rookX2 != kingX && rookY2 == kingY))) -> 2
-        else -> 0
+    val firstTest = (rookX1 == kingX)
+    val secondTest = (rookY1 == kingY)
+    val thirdTest = (rookX2 == kingX)
+    val fourthTest = (rookY2 == kingY)
+    if (firstTest || secondTest) {
+        return if (thirdTest || fourthTest) 3 else 1
+    } else {
+        return if (thirdTest || fourthTest) 2 else 0
     }
 }
 
@@ -148,11 +148,13 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    return when {
-        (abs(bishopX-kingX) == abs(bishopY-kingY)) && ((rookX == kingX && rookY != kingY) || (rookX != kingX && rookY == kingY)) -> 3
-        ((rookX == kingX && rookY != kingY) || (rookX != kingX && rookY == kingY)) -> 1
-        (abs(bishopX-kingX) == abs(bishopY-kingY)) -> 2
-        else -> 0
+    val fT = (abs(bishopX - kingX) == abs(bishopY - kingY))
+    val sT = (rookX == kingX)
+    val tT = (rookY == kingY)
+    if (sT || tT) {
+        return if (fT) 3 else 1
+    } else {
+        return if (fT) 2 else 0
     }
 }
 
@@ -165,8 +167,8 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    val maxSide = max(max(a,b), max(b,c))
-    val minSide = min(min(a,b), min(b,c))
+    val maxSide = max(max(a, b), max(b, c))
+    val minSide = min(min(a, b), min(b, c))
     val midSide = a + b + c - maxSide - minSide
     val maxSqr = sqr(maxSide)
     val midSqr = sqr(midSide)
@@ -192,8 +194,8 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     return when {
         (c > b) && (c > a) && (d > a) && (d > b) -> -1
         (a > d) && (a > c) && (b > c) && (b > d) -> -1
-        ((b==c) && (d > a))||((a==d)&&(b > c)) -> 0
-        (c >= a) && (d >= a) && (b >= c) && (b >= d) -> (d-c)
+        ((b == c) && (d > a)) || ((a == d) && (b > c)) -> 0
+        (c >= a) && (d >= a) && (b >= c) && (b >= d) -> (d - c)
         (a >= c) && (b >= c) && (d >= a) && (d >= b) -> (b - a)
         (c >= a) && (d >= a) && (b >= c) -> (b - c)
         (a >= c) && (b >= c) && (d >= a) -> (d - a)
