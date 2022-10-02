@@ -2,6 +2,7 @@
 
 package lesson1.task1
 
+import lesson3.task1.squareSequenceDigit
 import kotlin.math.*
 
 // Урок 1: простые функции
@@ -55,7 +56,6 @@ fun quadraticRootProduct(a: Double, b: Double, c: Double): Double {
 fun main() {
     val x1x2 = quadraticRootProduct(1.0, 13.0, 42.0)
     println("Root product: $x1x2")
-    println(PI / 180)
 }
 
 /**

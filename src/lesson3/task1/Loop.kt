@@ -2,6 +2,9 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
+import kotlin.math.abs
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -72,7 +75,16 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    if (n in 0..9) return 1
+    var result = 0
+    var number = n
+    while (number > 0) {
+        result += 1
+        number /= 10
+    }
+    return result
+}
 
 /**
  * Простая (2 балла)
@@ -80,21 +92,44 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    if (n in 1..2) return 1
+    var fNum = 1
+    var sNum = 1
+    var helpNum = 1
+    for (i in 3..n) {
+        helpNum = sNum
+        sNum += fNum
+        fNum = helpNum
+    }
+    return sNum
+}
 
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    var minD = n
+    for (i in 2..(sqrt(n.toDouble()).toInt() + 1)) {
+        if (n % i == 0) return i
+    }
+    return minD
+}
 
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    var maxD = 1
+    for (i in 2..(sqrt(n.toDouble()).toInt() + 1)) {
+        if (n % i == 0) return n / i
+    }
+    return maxD
+}
 
 /**
  * Простая (2 балла)
@@ -112,7 +147,19 @@ fun maxDivisor(n: Int): Int = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var number = x
+    var numOfSteps = 0
+    while (number != 1) {
+        if (number % 2 == 0) {
+            number /= 2
+        } else {
+            number = 3 * number + 1
+        }
+        numOfSteps += 1
+    }
+    return numOfSteps
+}
 
 /**
  * Средняя (3 балла)
@@ -120,7 +167,20 @@ fun collatzSteps(x: Int): Int = TODO()
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = TODO()
+fun lcm(m: Int, n: Int): Int {
+    var a = m
+    var b = n
+    while (a != 0 && b != 0) {
+        if (a > b) {
+            a %= b
+        } else if (a < b) {
+            b %= a
+        } else {
+            return a
+        }
+    }
+    return (m * n) / (a + b)
+}
 
 /**
  * Средняя (3 балла)
@@ -129,7 +189,20 @@ fun lcm(m: Int, n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    var a = m
+    var b = n
+    while (a != 0 && b != 0) {
+        if (a > b) {
+            a %= b
+        } else if (a < b) {
+            b %= a
+        } else {
+            return false
+        }
+    }
+    return (a + b == 1)
+}
 
 /**
  * Средняя (3 балла)
@@ -138,7 +211,15 @@ fun isCoPrime(m: Int, n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var number = n
+    var result = 0
+    while (number != 0) {
+        result = result * 10 + number % 10
+        number /= 10
+    }
+    return result
+}
 
 /**
  * Средняя (3 балла)
@@ -149,7 +230,15 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean {
+    var number = n
+    var result = 0
+    while (number != 0) {
+        result = result * 10 + number % 10
+        number /= 10
+    }
+    return result == n
+}
 
 /**
  * Средняя (3 балла)
@@ -159,7 +248,16 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var x = n
+    var h = 0
+    while (x > 9) {
+        h = x % 10
+        x /= 10
+        if (x % 10 == h) continue else return true
+    }
+    return false
+}
 
 /**
  * Средняя (4 балла)
@@ -192,7 +290,29 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var digitAmount = 0
+    var numberNow = 0
+    var sqrNumberNow = 0
+    var digitAmountNow = 0
+    var result = 0
+    while (digitAmount < n) {
+        digitAmountNow = 0
+        numberNow += 1
+        sqrNumberNow = sqr(numberNow)
+        while (sqrNumberNow > 0) {
+            digitAmountNow += 1
+            sqrNumberNow /= 10
+        }
+        digitAmount += digitAmountNow
+        result = sqr(numberNow)
+    }
+    while (digitAmount != n) {
+        result /= 10
+        digitAmount -= 1
+    }
+    return if (result < 9) result else result % 10
+}
 
 /**
  * Сложная (5 баллов)
@@ -203,4 +323,29 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    if (n in 1..2) return 1
+    var digitAmount = 2
+    var fNum = 1
+    var sNum = 1
+    var helpNum = 1
+    var result = 2
+    while (digitAmount < n) {
+        var digitAmountNow = 0
+        helpNum = sNum
+        sNum += fNum
+        fNum = helpNum
+        result = sNum
+        while (result != 0) {
+            digitAmountNow += 1
+            result /= 10
+        }
+        digitAmount += digitAmountNow
+        result = sNum
+    }
+    while (digitAmount != n) {
+        result /= 10
+        digitAmount -= 1
+    }
+    return if (result < 9) result else result % 10
+}
