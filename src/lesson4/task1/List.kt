@@ -381,7 +381,7 @@ fun russian(n: Int): String {
         }
         result += when (lastNum) {
             1 -> "тысяча "
-            in 2..5 -> "тысячи "
+            in 2..4 -> "тысячи "
             else -> "тысяч "
         }
     }
