@@ -76,9 +76,9 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    if (n in 0..9) return 1
+    var number = abs(n)
+    if (number in 0..9) return 1
     var result = 0
-    var number = n
     while (number > 0) {
         result += 1
         number /= 10
@@ -190,6 +190,7 @@ fun lcm(m: Int, n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
+    if (m == 1 && n == 1) return true
     var a = m
     var b = n
     while (a != 0 && b != 0) {

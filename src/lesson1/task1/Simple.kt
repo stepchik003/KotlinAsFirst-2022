@@ -2,6 +2,8 @@
 
 package lesson1.task1
 
+import lesson3.task1.digitNumber
+import lesson3.task1.isCoPrime
 import lesson3.task1.squareSequenceDigit
 import kotlin.math.*
 

@@ -3,6 +3,9 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.numberRevert
+import lesson1.task1.sqr
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -120,14 +123,26 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var result = 0.0
+    for (i in v) {
+        result += sqr(i)
+    }
+    return sqrt(result)
+}
 
 /**
  * Простая (2 балла)
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    var result = 0.0
+    for (i in list) {
+        result += i
+    }
+    return if (list.isNotEmpty()) result / list.size else 0.0
+}
 
 /**
  * Средняя (3 балла)
@@ -137,7 +152,13 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    val avg: Double = list.sum() / list.size
+    for (i in 0 until list.size) {
+        list[i] -= avg
+    }
+    return list
+}
 
 /**
  * Средняя (3 балла)
@@ -146,7 +167,14 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int = TODO()
+fun times(a: List<Int>, b: List<Int>): Int {
+    if (a.isEmpty() || b.isEmpty()) return 0
+    var c = 0
+    for (i in a.indices) {
+        c += a[i] * b[i]
+    }
+    return c
+}
 
 /**
  * Средняя (3 балла)
@@ -156,7 +184,16 @@ fun times(a: List<Int>, b: List<Int>): Int = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int = TODO()
+fun polynom(p: List<Int>, x: Int): Int {
+    if (p.isEmpty()) return 0
+    var degree = 0
+    var result = 0.0
+    for (i in p) {
+        result += i * (x.toDouble()).pow(degree)
+        degree += 1
+    }
+    return result.toInt()
+}
 
 /**
  * Средняя (3 балла)
@@ -168,7 +205,18 @@ fun polynom(p: List<Int>, x: Int): Int = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
+fun accumulate(list: MutableList<Int>): MutableList<Int> {
+    if (list.isEmpty()) return list
+    var sumNow = 0
+    for (i in list.size - 1 downTo 0) {
+        sumNow = 0
+        for (k in 0 until i) {
+            sumNow += list[k]
+        }
+        list[i] += sumNow
+    }
+    return list
+}
 
 /**
  * Средняя (3 балла)
@@ -241,7 +289,63 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var result = ""
+    var number = n
+    if (number > 1000) {
+        result += "M".repeat(number / 1000)
+        number %= 1000
+    }
+    if (number >= 900) {
+        result += "CM"
+        number -= 900
+    }
+    if (number >= 500) {
+        result += "D"
+        number -= 500
+    }
+    if (number >= 400) {
+        result += "CD"
+        number -= 400
+    }
+    if (number >= 100) {
+        result += "C".repeat(number / 100)
+        number %= 100
+    }
+    if (number >= 90) {
+        result += "XC"
+        number -= 90
+    }
+    if (number >= 50) {
+        result += "L"
+        number -= 50
+    }
+    if (number >= 40) {
+        result += "XL"
+        number -= 40
+    }
+    if (number >= 10) {
+        result += "X".repeat(number / 10)
+        number %= 10
+    }
+    if (number == 9) {
+        result += "IX"
+        number -= 9
+    }
+    if (number >= 5) {
+        result += "V"
+        number -= 5
+    }
+    if (number == 4) {
+        result += "IV"
+        number -= 4
+    }
+    if (number >= 1) {
+        result += "I".repeat(number)
+        number = 0
+    }
+    return result
+}
 
 /**
  * Очень сложная (7 баллов)
@@ -250,4 +354,106 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    var result = ""
+    var numTh = n / 1000
+    var lastNum = 0
+    var numL = n % 1000
+    var divNum = 100
+    if (numTh != 0) {
+        for (i in 3 downTo 1) {
+            if (numTh / divNum == 0) {
+                numTh %= divNum
+                divNum /= 10
+                continue
+            }
+            if (numTh in 10..19) {
+                result += (nameDigit(numTh, 1))
+                break
+            }
+            result += (nameDigit((numTh / divNum) * divNum, 1))
+            println((numTh / divNum) * divNum)
+            lastNum = numTh
+            numTh %= divNum
+            divNum /= 10
+            println(divNum)
+            println(numTh)
+        }
+        result += when (lastNum) {
+            1 -> "тысяча "
+            in 2..5 -> "тысячи "
+            else -> "тысяч "
+        }
+    }
+    divNum = 100
+    for (i in 3 downTo 1) {
+        if (numL / divNum == 0) {
+            numL %= divNum
+            divNum /= 10
+            continue
+        }
+        if (numL in 10..19) {
+            result += (nameDigit(numL, 1))
+            break
+        }
+        result += (nameDigit((numL / divNum) * divNum, 2))
+        println((numL / divNum) * divNum)
+        numL %= divNum
+        divNum /= 10
+        println(divNum)
+        println(numL)
+    }
+    return result.trim()
+}
+
+fun nameDigit(n: Int, d: Int): String {
+    if (d == 1) {
+        when (n) {
+            1 -> return "одна "
+            2 -> return "две "
+        }
+    } else {
+        when (n) {
+            1 -> return "один"
+            2 -> return "два"
+        }
+    }
+    return when (n) {
+        100 -> "сто "
+        200 -> "двести "
+        300 -> "триста "
+        400 -> "четыреста "
+        500 -> "пятьсот "
+        600 -> "шестьсот "
+        700 -> "семьсот "
+        800 -> "восемьсот "
+        900 -> "девятьсот "
+        10 -> "десять "
+        11 -> "одиннадцать "
+        12 -> "двенадцать "
+        13 -> "тринадцать "
+        14 -> "четырнадцать "
+        15 -> "пятнадцать "
+        16 -> "шестнадцать "
+        17 -> "семнадцать "
+        18 -> "восемнадцать "
+        19 -> "девятнадцать "
+        20 -> "двадцать "
+        30 -> "тридцать "
+        40 -> "сорок "
+        50 -> "пятьдесят "
+        60 -> "шестьдесят "
+        70 -> "семьдесят "
+        80 -> "восемьдесят "
+        90 -> "девяносто "
+        3 -> "три "
+        4 -> "четыре "
+        5 -> "пять "
+        6 -> "шесть "
+        7 -> "семь "
+        8 -> "восемь "
+        9 -> "девять "
+        0 -> "ноль "
+        else -> "ошибка "
+    }
+}
