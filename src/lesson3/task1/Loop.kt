@@ -189,21 +189,7 @@ fun lcm(m: Int, n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    if (m == 1 && n == 1) return true
-    var a = m
-    var b = n
-    while (a != 0 && b != 0) {
-        if (a > b) {
-            a %= b
-        } else if (a < b) {
-            b %= a
-        } else {
-            return false
-        }
-    }
-    return (a + b == 1)
-}
+fun isCoPrime(m: Int, n: Int): Boolean = (m * n) / lcm(m, n) == 1
 
 /**
  * Средняя (3 балла)
@@ -294,24 +280,13 @@ fun cos(x: Double, eps: Double): Double = TODO()
 fun squareSequenceDigit(n: Int): Int {
     var digitAmount = 0
     var numberNow = 0
-    var sqrNumberNow = 0
-    var digitAmountNow = 0
     var result = 0
     while (digitAmount < n) {
-        digitAmountNow = 0
         numberNow += 1
-        sqrNumberNow = sqr(numberNow)
-        while (sqrNumberNow > 0) {
-            digitAmountNow += 1
-            sqrNumberNow /= 10
-        }
-        digitAmount += digitAmountNow
         result = sqr(numberNow)
+        digitAmount += digitCounter(result)
     }
-    while (digitAmount != n) {
-        result /= 10
-        digitAmount -= 1
-    }
+    result = digitCutter(result, digitAmount - n)
     return if (result < 9) result else result % 10
 }
 
@@ -329,24 +304,32 @@ fun fibSequenceDigit(n: Int): Int {
     var digitAmount = 2
     var fNum = 1
     var sNum = 1
-    var helpNum = 1
     var result = 2
     while (digitAmount < n) {
-        var digitAmountNow = 0
-        helpNum = sNum
+        var helpNum = sNum
         sNum += fNum
         fNum = helpNum
         result = sNum
-        while (result != 0) {
-            digitAmountNow += 1
-            result /= 10
-        }
-        digitAmount += digitAmountNow
-        result = sNum
+        digitAmount += digitCounter(result)
     }
-    while (digitAmount != n) {
-        result /= 10
-        digitAmount -= 1
-    }
+    result = digitCutter(result, digitAmount - n)
     return if (result < 9) result else result % 10
+}
+
+fun digitCounter(n: Int): Int {
+    var num = n
+    var result = 0
+    while (num != 0) {
+        result++
+        num /= 10
+    }
+    return result
+}
+
+fun digitCutter(n: Int, m: Int): Int {
+    var result = n
+    for (i in 0 until m) {
+        result /= 10
+    }
+    return result
 }

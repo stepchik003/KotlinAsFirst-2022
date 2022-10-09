@@ -190,7 +190,7 @@ fun polynom(p: List<Int>, x: Int): Int {
     var result = 0.0
     for (i in p) {
         result += i * (x.toDouble()).pow(degree)
-        degree += 1
+        degree++
     }
     return result.toInt()
 }
@@ -292,57 +292,26 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
 fun roman(n: Int): String {
     var result = ""
     var number = n
-    if (number > 1000) {
-        result += "M".repeat(number / 1000)
-        number %= 1000
-    }
-    if (number >= 900) {
-        result += "CM"
-        number -= 900
-    }
-    if (number >= 500) {
-        result += "D"
-        number -= 500
-    }
-    if (number >= 400) {
-        result += "CD"
-        number -= 400
-    }
-    if (number >= 100) {
-        result += "C".repeat(number / 100)
-        number %= 100
-    }
-    if (number >= 90) {
-        result += "XC"
-        number -= 90
-    }
-    if (number >= 50) {
-        result += "L"
-        number -= 50
-    }
-    if (number >= 40) {
-        result += "XL"
-        number -= 40
-    }
-    if (number >= 10) {
-        result += "X".repeat(number / 10)
-        number %= 10
-    }
-    if (number == 9) {
-        result += "IX"
-        number -= 9
-    }
-    if (number >= 5) {
-        result += "V"
-        number -= 5
-    }
-    if (number == 4) {
-        result += "IV"
-        number -= 4
-    }
-    if (number >= 1) {
-        result += "I".repeat(number)
-        number = 0
+    val romanToInt = mapOf(
+        1000 to "M",
+        900 to "CM",
+        500 to "D",
+        400 to "CD",
+        100 to "C",
+        90 to "XC",
+        50 to "L",
+        40 to "XL",
+        10 to "X",
+        9 to "IX",
+        5 to "V",
+        4 to "IV",
+        1 to "I"
+    )
+    for ((int, roman) in romanToInt) {
+        if (number >= int) {
+            result += roman.repeat(number / int)
+            number %= int
+        }
     }
     return result
 }
@@ -357,52 +326,16 @@ fun roman(n: Int): String {
 fun russian(n: Int): String {
     var result = ""
     var numTh = n / 1000
-    var lastNum = 0
     var numL = n % 1000
-    var divNum = 100
     if (numTh != 0) {
-        for (i in 3 downTo 1) {
-            if (numTh / divNum == 0) {
-                numTh %= divNum
-                divNum /= 10
-                continue
-            }
-            if (numTh in 10..19) {
-                result += (nameDigit(numTh, 1))
-                break
-            }
-            result += (nameDigit((numTh / divNum) * divNum, 1))
-            println((numTh / divNum) * divNum)
-            lastNum = numTh
-            numTh %= divNum
-            divNum /= 10
-            println(divNum)
-            println(numTh)
-        }
-        result += when (lastNum) {
+        result += russianPart(numTh, 1)
+        result += when (numTh % 10) {
             1 -> "тысяча "
             in 2..4 -> "тысячи "
             else -> "тысяч "
         }
     }
-    divNum = 100
-    for (i in 3 downTo 1) {
-        if (numL / divNum == 0) {
-            numL %= divNum
-            divNum /= 10
-            continue
-        }
-        if (numL in 10..19) {
-            result += (nameDigit(numL, 1))
-            break
-        }
-        result += (nameDigit((numL / divNum) * divNum, 2))
-        println((numL / divNum) * divNum)
-        numL %= divNum
-        divNum /= 10
-        println(divNum)
-        println(numL)
-    }
+    result += russianPart(numL,2)
     return result.trim()
 }
 
@@ -456,4 +389,25 @@ fun nameDigit(n: Int, d: Int): String {
         0 -> "ноль "
         else -> "ошибка "
     }
+}
+
+fun russianPart(n: Int, d: Int): String {
+    var num = n
+    var divNum = 100
+    var result = ""
+    for (i in 3 downTo 1) {
+        if (num / divNum == 0) {
+            num %= divNum
+            divNum /= 10
+            continue
+        }
+        if (num in 10..19) {
+            result += (nameDigit(num, 1))
+            break
+        }
+        result += (nameDigit((num / divNum) * divNum, d))
+        num %= divNum
+        divNum /= 10
+    }
+    return result
 }
