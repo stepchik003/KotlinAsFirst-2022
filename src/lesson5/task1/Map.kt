@@ -96,7 +96,20 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val setGrades = grades.values.toSet()
+    val result = mutableMapOf<Int, List<String>>()
+    for (setGrade in setGrades) {
+        var list = mutableListOf<String>()
+        for ((student, grade) in grades) {
+            if (grade == setGrade) {
+                list.add(student)
+            }
+        }
+        result[setGrade] = list
+    }
+    return result
+}
 
 /**
  * Простая (2 балла)
@@ -108,7 +121,12 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    for ((key, value) in a) {
+        if (value != b[key]) return false
+    }
+    return true
+}
 
 /**
  * Простая (2 балла)
@@ -125,7 +143,13 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *     -> a changes to mutableMapOf() aka becomes empty
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    TODO()
+    val list = mutableListOf<String>()
+    for ((key, value) in a) {
+        if (value == b[key]) list.add(key)
+    }
+    for (keys in list) {
+        a.remove(keys)
+    }
 }
 
 /**
@@ -166,7 +190,24 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val result = mutableMapOf<String, Double>()
+    var stock = ""
+    var price = 0.0
+    var k = 1
+    for ((first, second) in stockPrices)
+        if (stock == first) {
+            k++
+            price += second
+        } else {
+            if (stock.isNotEmpty()) result[stock] = price / k
+            stock = first
+            price = second
+            k = 1
+        }
+    if (stock.isNotEmpty()) result[stock] = price / k
+    return result
+}
 
 /**
  * Средняя (4 балла)
@@ -258,7 +299,22 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *          "GoodGnome" to setOf()
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val result = mutableMapOf<String, Set<String>>()
+    val setFriends = mutableSetOf<String>()
+    for ((friend, theirFriends) in friends) {
+        setFriends.add(friend)
+        theirFriends.forEach { setFriends.add(it) }
+    }
+    for (person in setFriends) {
+        val allFriends = mutableSetOf<String>()
+        friends[person]?.forEach { allFriends.add(it) }
+        allFriends.forEach { friends[it]?.let { it1 -> allFriends.addAll(it1) } }
+        allFriends.remove(person)
+        result[person] = allFriends
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
@@ -277,7 +333,30 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    if (list.sum() == number && list.size == 2) return Pair(0, 1)
+    if (list.isEmpty() || list.sum() <= number) return Pair(-1, -1)
+
+    var a = -1
+    var b = -1
+    var sum = 0
+    var n = list.size / 2
+    while (sum != number) {
+        if (list[n] + list[n - 1] < number) {
+            n++
+        } else if (list[n] + list[n - 1] == number) {
+            return Pair(n, n - 1)
+        } else {
+            for (i in 0..n) {
+                if (list[n] + list[i] == number) {
+                    return Pair(i, n)
+                }
+            }
+            n++
+        }
+    }
+    return Pair(-1, -1)
+}
 
 /**
  * Очень сложная (8 баллов)
