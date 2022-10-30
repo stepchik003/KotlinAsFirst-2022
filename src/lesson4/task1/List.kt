@@ -329,13 +329,17 @@ fun russian(n: Int): String {
     var numL = n % 1000
     if (numTh != 0) {
         result += russianPart(numTh, 1)
-        result += when (numTh % 10) {
-            1 -> "тысяча "
-            in 2..4 -> "тысячи "
-            else -> "тысяч "
+        result += if (numTh % 100 in 11..14) {
+            "тысяч "
+        } else {
+            when (numTh % 10) {
+                1 -> "тысяча "
+                in 2..4 -> "тысячи "
+                else -> "тысяч "
+            }
         }
     }
-    result += russianPart(numL,2)
+    result += russianPart(numL, 2)
     return result.trim()
 }
 
