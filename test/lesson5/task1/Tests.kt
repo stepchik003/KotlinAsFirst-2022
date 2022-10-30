@@ -198,6 +198,10 @@ class Tests {
             averageStockPrice(listOf())
         )
         assertEquals(
+            mapOf<String, Double>("" to 0.0),
+            averageStockPrice(listOf("" to 0.0))
+        )
+        assertEquals(
             mapOf("MSFT" to 100.0, "NFLX" to 40.0),
             averageStockPrice(listOf("MSFT" to 100.0, "NFLX" to 40.0))
         )
@@ -267,6 +271,20 @@ class Tests {
     @Test
     @Tag("5")
     fun propagateHandshakes() {
+        assertEquals(
+            mapOf(
+                "0" to setOf(),
+                "1" to setOf("2", "0"),
+                "2" to setOf("1", "0")
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "0" to setOf(),
+                    "1" to setOf("2"),
+                    "2" to setOf("1", "0")
+                )
+            )
+        )
         assertEquals(
             mapOf(
                 "Marat" to setOf("Mikhail", "Sveta"),

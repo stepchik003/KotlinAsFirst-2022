@@ -191,12 +191,14 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    if (stockPrices.isEmpty()) return mapOf()
+    if (stockPrices.first().first.isEmpty()) return mapOf("" to 0.0)
     val result = mutableMapOf<String, Double>()
     var stock = ""
     var price = 0.0
     var k = 1
     for ((first, second) in stockPrices)
-        if (stock == first) {
+        if (stock == first && first.isNotEmpty()) {
             k++
             price += second
         } else {
@@ -309,7 +311,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for (person in setFriends) {
         val allFriends = mutableSetOf<String>()
         friends[person]?.forEach { allFriends.add(it) }
-        allFriends.forEach { friends[it]?.let { it1 -> allFriends.addAll(it1) } }
+        friends[person]?.forEach { friends[it]?.let { it1 -> allFriends.addAll(it1) } }
         allFriends.remove(person)
         result[person] = allFriends
     }
@@ -335,7 +337,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     if (list.sum() == number && list.size == 2) return Pair(0, 1)
-    if (list.isEmpty() || list.sum() <= number) return Pair(-1, -1)
+    if (list.sum() <= number || list.size < 2) return Pair(-1, -1)
 
     var a = -1
     var b = -1
