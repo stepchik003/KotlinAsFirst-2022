@@ -192,7 +192,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     if (stockPrices.isEmpty()) return mapOf()
-    if (stockPrices.first().first.isEmpty()) return mapOf("" to 0.0)
+    if (stockPrices.first().first.isEmpty()) return mapOf("" to stockPrices.first().second)
     val result = mutableMapOf<String, Double>()
     var stock = ""
     var price = 0.0
@@ -309,9 +309,18 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         theirFriends.forEach { setFriends.add(it) }
     }
     for (person in setFriends) {
-        val allFriends = mutableSetOf<String>()
-        friends[person]?.forEach { allFriends.add(it) }
-        friends[person]?.forEach { friends[it]?.let { it1 -> allFriends.addAll(it1) } }
+        if (friends[person] == null) {
+            result[person] = setOf()
+            continue
+        }
+        val allFriends = friends[person]?.toMutableSet() ?: break
+        val newFriends = mutableSetOf<String>()
+        while (true) {
+            var oldSize = allFriends.size
+            allFriends.forEach { friends[it]?.let { it1 -> newFriends.addAll(it1) } }
+            allFriends.addAll(newFriends)
+            if (allFriends.size == oldSize) break
+        }
         allFriends.remove(person)
         result[person] = allFriends
     }
@@ -336,7 +345,9 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    if (list.sum() == number && list.size == 2) return Pair(0, 1)
+    if (list.size == 2) {
+        return if (list.sum() == number) Pair(0, 1) else Pair(-1, -1)
+    }
     if (list.sum() <= number || list.size < 2) return Pair(-1, -1)
 
     var a = -1

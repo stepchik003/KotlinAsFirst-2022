@@ -198,8 +198,12 @@ class Tests {
             averageStockPrice(listOf())
         )
         assertEquals(
-            mapOf<String, Double>("" to 0.0),
+            mapOf("" to 0.0),
             averageStockPrice(listOf("" to 0.0))
+        )
+        assertEquals(
+            mapOf("" to 1.0),
+            averageStockPrice(listOf("" to 1.0))
         )
         assertEquals(
             mapOf("MSFT" to 100.0, "NFLX" to 40.0),
@@ -287,6 +291,22 @@ class Tests {
         )
         assertEquals(
             mapOf(
+                "0" to setOf(),
+                "1" to setOf("2", "0"),
+                "2" to setOf("0"),
+                "3" to setOf("1", "2", "0")
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "0" to setOf(),
+                    "1" to setOf("2"),
+                    "2" to setOf("0"),
+                    "3" to setOf("1")
+                )
+            )
+        )
+        assertEquals(
+            mapOf(
                 "Marat" to setOf("Mikhail", "Sveta"),
                 "Sveta" to setOf("Mikhail"),
                 "Mikhail" to setOf()
@@ -325,6 +345,10 @@ class Tests {
         assertEquals(
             Pair(-1, -1),
             findSumOfTwo(emptyList(), 1)
+        )
+        assertEquals(
+            Pair(-1, -1),
+            findSumOfTwo(listOf(1, 1), 1)
         )
         assertEquals(
             Pair(0, 2),
