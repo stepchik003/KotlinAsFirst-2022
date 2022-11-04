@@ -192,22 +192,22 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     if (stockPrices.isEmpty()) return mapOf()
-    if (stockPrices.first().first.isEmpty()) return mapOf("" to stockPrices.first().second)
+    /*if (stockPrices.first().first == null) return mapOf("" to stockPrices.first().second)*/
     val result = mutableMapOf<String, Double>()
     var stock = ""
     var price = 0.0
-    var k = 1
+    var k = 0
     for ((first, second) in stockPrices)
-        if (stock == first && first.isNotEmpty()) {
+        if (stock == first) {
             k++
             price += second
         } else {
-            if (stock.isNotEmpty()) result[stock] = price / k
+            if (k != 0) result[stock] = price / k
             stock = first
             price = second
             k = 1
         }
-    if (stock.isNotEmpty()) result[stock] = price / k
+    result[stock] = price / k
     return result
 }
 
@@ -348,17 +348,14 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     if (list.size == 2) {
         return if (list.sum() == number) Pair(0, 1) else Pair(-1, -1)
     }
-    if (list.sum() <= number || list.size < 2) return Pair(-1, -1)
-
-    var a = -1
-    var b = -1
-    var sum = 0
+    if (list.sum() < number || list.size < 2) return Pair(-1, -1)
     var n = list.size / 2
-    while (sum != number) {
+    while (true) {
+        if (n >= list.size) break
         if (list[n] + list[n - 1] < number) {
             n++
         } else if (list[n] + list[n - 1] == number) {
-            return Pair(n, n - 1)
+            return Pair(n - 1, n)
         } else {
             for (i in 0..n) {
                 if (list[n] + list[i] == number) {

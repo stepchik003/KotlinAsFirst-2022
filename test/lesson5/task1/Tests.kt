@@ -202,6 +202,10 @@ class Tests {
             averageStockPrice(listOf("" to 0.0))
         )
         assertEquals(
+            mapOf("" to 0.3333333333333333),
+            averageStockPrice(listOf("" to 0.0, "" to 1.0, "" to 0.0))
+        )
+        assertEquals(
             mapOf("" to 1.0),
             averageStockPrice(listOf("" to 1.0))
         )
@@ -349,6 +353,10 @@ class Tests {
         assertEquals(
             Pair(-1, -1),
             findSumOfTwo(listOf(1, 1), 1)
+        )
+        assertEquals(
+            Pair(0, 1),
+            findSumOfTwo(listOf(0, 0, 0), 0)
         )
         assertEquals(
             Pair(0, 2),
