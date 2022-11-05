@@ -2,6 +2,10 @@
 
 package lesson5.task1
 
+import ru.spbstu.wheels.toMutableMap
+import kotlin.math.max
+import kotlin.math.min
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -194,10 +198,11 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     if (stockPrices.isEmpty()) return mapOf()
     /*if (stockPrices.first().first == null) return mapOf("" to stockPrices.first().second)*/
     val result = mutableMapOf<String, Double>()
+    val newStockPrices = stockPrices.sortedBy { it.first }
     var stock = ""
     var price = 0.0
     var k = 0
-    for ((first, second) in stockPrices)
+    for ((first, second) in newStockPrices)
         if (stock == first) {
             k++
             price += second
@@ -350,22 +355,48 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     }
     if (list.sum() < number || list.size < 2) return Pair(-1, -1)
     var n = list.size / 2
+    val listInMap = mutableMapOf<Int, Int>()
+    for (i in list.indices) {
+        listInMap[i] = list[i]
+    }
+    var a = -1
+    var b = -1
+    val result = listInMap.toList().sortedBy { (_, value) -> value }.toMutableMap()
+    val newList = list.sorted()
     while (true) {
         if (n >= list.size) break
-        if (list[n] + list[n - 1] < number) {
+        if (newList[n] + newList[n - 1] < number) {
             n++
-        } else if (list[n] + list[n - 1] == number) {
-            return Pair(n - 1, n)
+        } else if (newList[n] + newList[n - 1] == number) {
+            a = n - 1
+            b = n
+            break
         } else {
             for (i in 0..n) {
-                if (list[n] + list[i] == number) {
-                    return Pair(i, n)
+                if (newList[n] + newList[i] == number) {
+                    a = i
+                    b = n
+                    break
                 }
             }
             n++
         }
     }
-    return Pair(-1, -1)
+    if (a == -1 && b == -1) return Pair(a, b)
+    for ((key, value) in result) {
+        if (newList[a] == value) {
+            a = key
+            result.remove(key)
+            break
+        }
+    }
+    for ((key, value) in result) {
+        if (value == newList[b]) {
+            b = key
+            break
+        }
+    }
+    return Pair(min(a, b), max(a, b))
 }
 
 /**
