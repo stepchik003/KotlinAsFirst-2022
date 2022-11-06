@@ -386,13 +386,13 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
                 n++
             }
         }
-        if (a == -1 && b == -1) return Pair(a, b)
-        for ((key, value) in result) {
-            if (newList[a] == value) {
-                a = key
-                result.remove(key)
-                break
-            }
+    }
+    if (a == -1 && b == -1) return Pair(a, b)
+    for ((key, value) in result) {
+        if (newList[a] == value) {
+            a = key
+            result.remove(key)
+            break
         }
     }
     for ((key, value) in result) {
