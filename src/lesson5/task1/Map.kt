@@ -363,31 +363,36 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var b = -1
     val result = listInMap.toList().sortedBy { (_, value) -> value }.toMutableMap()
     val newList = list.sorted()
-    while (true) {
-        if (n >= list.size) break
-        if (newList[n] + newList[n - 1] < number) {
-            n++
-        } else if (newList[n] + newList[n - 1] == number) {
-            a = n - 1
-            b = n
-            break
-        } else {
-            for (i in 0..n) {
-                if (newList[n] + newList[i] == number) {
-                    a = i
-                    b = n
-                    break
+    if (number == 0 && newList[0] == 0 && newList[1] == 0) {
+        a == 0
+        b == 1
+    } else {
+        while (true) {
+            if (n >= list.size) break
+            if (newList[n] + newList[n - 1] < number) {
+                n++
+            } else if (newList[n] + newList[n - 1] == number) {
+                a = n - 1
+                b = n
+                break
+            } else {
+                for (i in 0..n) {
+                    if (newList[n] + newList[i] == number) {
+                        a = i
+                        b = n
+                        break
+                    }
                 }
+                n++
             }
-            n++
         }
-    }
-    if (a == -1 && b == -1) return Pair(a, b)
-    for ((key, value) in result) {
-        if (newList[a] == value) {
-            a = key
-            result.remove(key)
-            break
+        if (a == -1 && b == -1) return Pair(a, b)
+        for ((key, value) in result) {
+            if (newList[a] == value) {
+                a = key
+                result.remove(key)
+                break
+            }
         }
     }
     for ((key, value) in result) {
