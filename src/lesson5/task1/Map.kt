@@ -2,6 +2,7 @@
 
 package lesson5.task1
 
+import ru.spbstu.wheels.asList
 import ru.spbstu.wheels.toMutableMap
 import kotlin.math.max
 import kotlin.math.min
@@ -354,6 +355,32 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     }
     var a = -1
     var b = -1
+    val newList = list.toMutableList()
+    for (i in list) {
+        newList.remove(i)
+        var d = number - i
+        if (d in newList) {
+            a = i
+            b = d
+        }
+        newList.add(i)
+    }
+    if (a == -1 && b == -1) return Pair(a, b)
+    for ((key, value) in listInMap) {
+        if (a == value) {
+            a = key
+            listInMap.remove(key)
+            break
+        }
+    }
+    for ((key, value) in listInMap) {
+        if (value == b) {
+            b = key
+            break
+        }
+    }
+    return Pair(min(a, b), max(a, b))
+    /*list.sorted()
     if (list.isEmpty()) return Pair(-1, -1)
     else if (number == 0 && list[0] == 0 && list[1] == 0) {
         a = 0
@@ -379,21 +406,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
             }
         }
     }
-    if (a == -1 && b == -1) return Pair(a, b)
-    for ((key, value) in listInMap) {
-        if (list[a] == value) {
-            a = key
-            listInMap.remove(key)
-            break
-        }
-    }
-    for ((key, value) in listInMap) {
-        if (value == list[b]) {
-            b = key
-            break
-        }
-    }
-    return Pair(min(a, b), max(a, b))
+    */
 }
 
 /**
