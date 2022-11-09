@@ -102,15 +102,12 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val setGrades = grades.values.toSet()
-    val result = mutableMapOf<Int, List<String>>()
-    for (setGrade in setGrades) {
-        var list = mutableListOf<String>()
-        for ((student, grade) in grades) {
-            if (grade == setGrade) {
-                list.add(student)
-            }
+    val result = mutableMapOf<Int, MutableList<String>>()
+    setGrades.forEach { result[it] = mutableListOf() }
+    for ((student, grade) in grades) {
+        if (grade in setGrades) {
+            result[grade]?.add(student)
         }
-        result[setGrade] = list
     }
     return result
 }
@@ -350,10 +347,6 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    if (list.size == 2) {
-        return if (list.sum() == number) Pair(0, 1) else Pair(-1, -1)
-    }
-    if (list.sum() < number || list.size < 2) return Pair(-1, -1)
     var n = 1
     val listInMap = mutableMapOf<Int, Int>()
     for (i in list.indices) {
@@ -361,8 +354,8 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     }
     var a = -1
     var b = -1
-    val result = listInMap.toList().sortedBy { (_, value) -> value }.toMutableMap()
-    val newList = list.sorted()
+    println(listInMap)
+    val newList = list
     if (number == 0 && newList[0] == 0 && newList[1] == 0) {
         a = 0
         b = 1
@@ -388,14 +381,14 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         }
     }
     if (a == -1 && b == -1) return Pair(a, b)
-    for ((key, value) in result) {
+    for ((key, value) in listInMap) {
         if (newList[a] == value) {
             a = key
-            result.remove(key)
+            listInMap.remove(key)
             break
         }
     }
-    for ((key, value) in result) {
+    for ((key, value) in listInMap) {
         if (value == newList[b]) {
             b = key
             break

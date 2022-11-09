@@ -355,6 +355,10 @@ class Tests {
             findSumOfTwo(listOf(2, 0, 1, 2), 1)
         )
         assertEquals(
+            Pair(5, 13),
+            findSumOfTwo(listOf(2, 0, 1, 2, 123123, 123, 0, 123, 435, 786, 3435, 12344, 234, 75, 4, 3, 2, 12), 198)
+        )
+        assertEquals(
             Pair(-1, -1),
             findSumOfTwo(emptyList(), 1)
         )
