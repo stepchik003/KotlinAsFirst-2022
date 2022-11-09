@@ -354,23 +354,22 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     }
     var a = -1
     var b = -1
-    println(listInMap)
-    val newList = list
-    if (number == 0 && newList[0] == 0 && newList[1] == 0) {
+    if (list.isEmpty()) return Pair(-1, -1)
+    else if (number == 0 && list[0] == 0 && list[1] == 0) {
         a = 0
         b = 1
     } else {
         while (true) {
             if (n >= list.size) break
-            if (newList[n] + newList[n - 1] < number) {
+            if (list[n] + list[n - 1] < number) {
                 n++
-            } else if (newList[n] + newList[n - 1] == number) {
+            } else if (list[n] + list[n - 1] == number) {
                 a = n - 1
                 b = n
                 break
             } else {
                 for (i in 0..n) {
-                    if (newList[n] + newList[i] == number) {
+                    if (list[n] + list[i] == number) {
                         a = i
                         b = n
                         break
@@ -382,14 +381,14 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     }
     if (a == -1 && b == -1) return Pair(a, b)
     for ((key, value) in listInMap) {
-        if (newList[a] == value) {
+        if (list[a] == value) {
             a = key
             listInMap.remove(key)
             break
         }
     }
     for ((key, value) in listInMap) {
-        if (value == newList[b]) {
+        if (value == list[b]) {
             b = key
             break
         }
