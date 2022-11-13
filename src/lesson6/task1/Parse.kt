@@ -84,7 +84,7 @@ fun dateStrToDigit(str: String): String {
     val month = dictDates(dates[1])
     if (month.isEmpty()) return ""
     if (dates[0].toInt() in 1..daysInMonth(month.toInt(), dates[2].toInt())) {
-        return String.format("%02d.%s.%4d", dates[0].toInt(), month, dates[2].toInt())
+        return String.format("%02d.%s.%d", dates[0].toInt(), month, dates[2].toInt())
     }
     return ""
 }
@@ -209,7 +209,7 @@ fun mostExpensive(description: String): String  {
     var maxPrice = 0.0
     var maxGood = ""
     for (good in goods) {
-        if (good.matches(Regex("[А-я]+\\s\\d+\\.\\d+"))){
+        if (good.matches(Regex("[А-яA-z]+\\s(\\d+|\\d+\\.\\d+)"))){
             maxPrice = max(good.split(" ")[1].toDouble(), maxPrice)
             if (maxPrice == good.split(" ")[1].toDouble()) maxGood = good.split(" ")[0]
         }
