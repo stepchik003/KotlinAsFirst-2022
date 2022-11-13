@@ -348,65 +348,22 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    var n = 1
-    val listInMap = mutableMapOf<Int, Int>()
+    val result = mutableMapOf<Int, Int>()
     for (i in list.indices) {
-        listInMap[i] = list[i]
+        result[i] = list[i]
     }
-    var a = -1
-    var b = -1
-    val newList = list.toMutableList()
-    for (i in list) {
-        newList.remove(i)
-        var d = number - i
-        if (d in newList) {
+    var a: Int
+    for ((i, k) in result) {
+        var d = number - k
+        if (result.containsValue(d)) {
             a = i
-            b = d
-        }
-        newList.add(i)
-    }
-    if (a == -1 && b == -1) return Pair(a, b)
-    for ((key, value) in listInMap) {
-        if (a == value) {
-            a = key
-            listInMap.remove(key)
-            break
-        }
-    }
-    for ((key, value) in listInMap) {
-        if (value == b) {
-            b = key
-            break
-        }
-    }
-    return Pair(min(a, b), max(a, b))
-    /*list.sorted()
-    if (list.isEmpty()) return Pair(-1, -1)
-    else if (number == 0 && list[0] == 0 && list[1] == 0) {
-        a = 0
-        b = 1
-    } else {
-        while (true) {
-            if (n >= list.size) break
-            if (list[n] + list[n - 1] < number) {
-                n++
-            } else if (list[n] + list[n - 1] == number) {
-                a = n - 1
-                b = n
-                break
-            } else {
-                for (i in 0..n) {
-                    if (list[n] + list[i] == number) {
-                        a = i
-                        b = n
-                        break
-                    }
-                }
-                n++
+            for ((j, m) in result) {
+                if (m == d && a != j)
+                    return Pair(a, j)
             }
         }
     }
-    */
+    return Pair(-1, -1)
 }
 
 /**

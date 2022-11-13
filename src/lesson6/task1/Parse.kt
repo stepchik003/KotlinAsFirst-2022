@@ -2,6 +2,10 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+import java.util.*
+import kotlin.math.max
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -74,7 +78,34 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val dates = str.split(" ")
+    if (dates.size != 3) return ""
+    val month = dictDates(dates[1])
+    if (month.isEmpty()) return ""
+    if (dates[0].toInt() in 1..daysInMonth(month.toInt(), dates[2].toInt())) {
+        return String.format("%02d.%s.%4d", dates[0].toInt(), month, dates[2].toInt())
+    }
+    return ""
+}
+
+fun dictDates(str: String): String {
+    return when (str) {
+        "января" -> "01"
+        "февраля" -> "02"
+        "марта" -> "03"
+        "апреля" -> "04"
+        "мая" -> "05"
+        "июня" -> "06"
+        "июля" -> "07"
+        "августа" -> "08"
+        "сентября" -> "09"
+        "октября" -> "10"
+        "ноября" -> "11"
+        "декабря" -> "12"
+        else -> ""
+    }
+}
 
 /**
  * Средняя (4 балла)
@@ -149,7 +180,17 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val words = str.split(" ")
+    var k = words[0].length + 1
+    for (i in 1 until words.size) {
+        if (words[i - 1].lowercase(Locale.getDefault()) == words[i].lowercase(Locale.getDefault())) {
+            return k - words[i].length - 1
+        }
+        k += words[i].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
@@ -162,7 +203,19 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String  {
+    val goods = description.split("; ")
+    val goodsInMap = mutableMapOf<String, Double>()
+    var maxPrice = 0.0
+    var maxGood = ""
+    for (good in goods) {
+        if (good.matches(Regex("[А-я]+\\s\\d+\\.\\d+"))){
+            maxPrice = max(good.split(" ")[1].toDouble(), maxPrice)
+            if (maxPrice == good.split(" ")[1].toDouble()) maxGood = good.split(" ")[0]
+        }
+    }
+    return maxGood
+}
 
 /**
  * Сложная (6 баллов)
