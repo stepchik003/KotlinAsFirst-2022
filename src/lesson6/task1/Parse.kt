@@ -209,7 +209,7 @@ fun mostExpensive(description: String): String  {
     var maxPrice = 0.0
     var maxGood = ""
     for (good in goods) {
-        if (good.matches(Regex("[А-яA-z]+\\s(\\d+|\\d+\\.\\d+)"))){
+        if (good.matches(Regex("\\S+\\s(\\d+|\\d+\\.\\d+)"))) {
             maxPrice = max(good.split(" ")[1].toDouble(), maxPrice)
             if (maxPrice == good.split(" ")[1].toDouble()) maxGood = good.split(" ")[0]
         }
