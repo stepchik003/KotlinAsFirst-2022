@@ -83,29 +83,29 @@ fun dateStrToDigit(str: String): String {
     if (dates.size != 3) return ""
     val month = dictDates(dates[1])
     if (month.isEmpty()) return ""
-    if (dates[0].toInt() in 1..daysInMonth(month.toInt(), dates[2].toInt())) {
+    val day = dates[0]
+    if (day.matches(Regex("\\d+")) && day.toInt() in 1..daysInMonth(month.toInt(), dates[2].toInt())) {
         return String.format("%02d.%s.%d", dates[0].toInt(), month, dates[2].toInt())
     }
     return ""
 }
 
-fun dictDates(str: String): String {
-    return when (str) {
-        "января" -> "01"
-        "февраля" -> "02"
-        "марта" -> "03"
-        "апреля" -> "04"
-        "мая" -> "05"
-        "июня" -> "06"
-        "июля" -> "07"
-        "августа" -> "08"
-        "сентября" -> "09"
-        "октября" -> "10"
-        "ноября" -> "11"
-        "декабря" -> "12"
-        else -> ""
-    }
+fun dictDates(str: String): String = when (str) {
+    "января" -> "01"
+    "февраля" -> "02"
+    "марта" -> "03"
+    "апреля" -> "04"
+    "мая" -> "05"
+    "июня" -> "06"
+    "июля" -> "07"
+    "августа" -> "08"
+    "сентября" -> "09"
+    "октября" -> "10"
+    "ноября" -> "11"
+    "декабря" -> "12"
+    else -> ""
 }
+
 
 /**
  * Средняя (4 балла)
@@ -203,16 +203,17 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String  {
+fun mostExpensive(description: String): String {
     val goods = description.split("; ")
-    val goodsInMap = mutableMapOf<String, Double>()
     var maxPrice = 0.0
     var maxGood = ""
     for (good in goods) {
         if (good.matches(Regex("\\S+\\s(\\d+|\\d+\\.\\d+)"))) {
-            maxPrice = max(good.split(" ")[1].toDouble(), maxPrice)
-            if (maxPrice == good.split(" ")[1].toDouble()) maxGood = good.split(" ")[0]
-        }
+            var nowPrice = good.split(" ")[1].toDouble()
+            if (nowPrice < 0.0) return ""
+            maxPrice = max(nowPrice, maxPrice)
+            if (maxPrice == nowPrice) maxGood = good.split(" ")[0]
+        } else return ""
     }
     return maxGood
 }

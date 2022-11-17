@@ -318,12 +318,11 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         }
         val allFriends = friends[person]?.toMutableSet() ?: break
         val newFriends = mutableSetOf<String>()
-        while (true) {
-            var oldSize = allFriends.size
+        do {
+            val oldSize = allFriends.size
             allFriends.forEach { friends[it]?.let { it1 -> newFriends.addAll(it1) } }
             allFriends.addAll(newFriends)
-            if (allFriends.size == oldSize) break
-        }
+        } while (allFriends.size != oldSize)
         allFriends.remove(person)
         result[person] = allFriends
     }
@@ -352,16 +351,18 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in list.indices) {
         result[i] = list[i]
     }
-    var a: Int
+    var a = -1
+    var d = -1
     for ((i, k) in result) {
-        var d = number - k
-        if (result.containsValue(d)) {
+        d = number - k
+        if (d in result.values) {
             a = i
-            for ((j, m) in result) {
-                if (m == d && a != j)
-                    return Pair(a, j)
-            }
+            break
         }
+    }
+    for ((j, m) in result) {
+        if (m == d && a != j)
+            return Pair(a, j)
     }
     return Pair(-1, -1)
 }
