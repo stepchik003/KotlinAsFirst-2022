@@ -84,8 +84,10 @@ fun dateStrToDigit(str: String): String {
     val month = dictDates(dates[1])
     if (month.isEmpty()) return ""
     val day = dates[0]
-    if (day.matches(Regex("\\d+")) && day.toInt() in 1..daysInMonth(month.toInt(), dates[2].toInt())) {
-        return String.format("%02d.%s.%d", dates[0].toInt(), month, dates[2].toInt())
+    val year = dates[2]
+    if (!(day.matches(Regex("\\d+")) || year.matches(Regex("\\d+")))) return ""
+    if (day.toInt() in 1..daysInMonth(month.toInt(), year.toInt())) {
+        return String.format("%02d.%s.%d", day.toInt(), month, year.toInt())
     }
     return ""
 }
@@ -208,12 +210,12 @@ fun mostExpensive(description: String): String {
     var maxPrice = 0.0
     var maxGood = ""
     for (good in goods) {
-        if (good.matches(Regex("\\S+\\s(\\d+|\\d+\\.\\d+)"))) {
-            var nowPrice = good.split(" ")[1].toDouble()
-            if (nowPrice < 0.0) return ""
-            maxPrice = max(nowPrice, maxPrice)
-            if (maxPrice == nowPrice) maxGood = good.split(" ")[0]
-        } else return ""
+        val goodChar = good.split(" ")
+        if (!good.matches(Regex("\\S+\\s(\\d+|\\d+\\.\\d+)"))) return ""
+        var nowPrice = goodChar[1].toDouble()
+        if (nowPrice < 0.0) return ""
+        maxPrice = max(nowPrice, maxPrice)
+        if (maxPrice == nowPrice) maxGood = goodChar[0]
     }
     return maxGood
 }
