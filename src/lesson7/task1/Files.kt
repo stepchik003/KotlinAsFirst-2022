@@ -300,6 +300,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var generalFlag = 0
     var k = 0
     for (line in File(inputName).readLines()) {
+        line.trim()
         if (line.isEmpty()) {
             if (k == 0) continue
             writer.write("</p><p>")
