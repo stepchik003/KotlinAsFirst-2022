@@ -300,8 +300,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var generalFlag = 0
     var k = 0
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty() && k != 0) writer.write("</p><p>")
-        else {
+        if (line.isEmpty() && k != 0) {
+            writer.write("</p><p>")
+        } else {
+            k = 1
             val words = line.split(" ")
             for (word in words) {
                 if (!word.contains(Regex("[*~]+"))) {
@@ -359,7 +361,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 generalFlag = 0
             }
         }
-        if (k == 0) k = 1
     }
     writer.write("</p></body></html>")
     writer.close()
