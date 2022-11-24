@@ -300,7 +300,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var generalFlag = 0
     var k = 0
     val lines = File(inputName).readLines()
-    if (lines.last().isEmpty() && lines.size > 1) lines.toMutableList().remove(lines.last())
+    if ((lines.last().isEmpty() || lines.last().matches(Regex("\\s+"))) && lines.size > 1) {
+        lines.toMutableList().remove(lines.last())
+    }
     for (line in lines) {
         if (line.isEmpty() || line.matches(Regex("\\s+"))) {
             if (k == 0) continue
