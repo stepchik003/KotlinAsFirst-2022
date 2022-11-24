@@ -344,9 +344,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         newWord += word[i]
                     }
                 }
-                generalFlag = 0
                 if (word.last() != '*' && word.last() != '~') newWord += word.last()
+                if (word.last() == '*' && generalFlag == 0) {
+                    if (flag1 == 0) {
+                        newWord += "<i>"
+                        flag1 = 1
+                    } else {
+                        newWord += "</i>"
+                        flag1 = 0
+                    }
+                }
                 writer.write("$newWord ")
+                generalFlag = 0
             }
         }
     }
