@@ -302,6 +302,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     for (line in File(inputName).readLines()) {
         if (line.isEmpty() && k != 0) {
             writer.write("</p><p>")
+            k = 0
         } else {
             k = 1
             val words = line.split(" ")
