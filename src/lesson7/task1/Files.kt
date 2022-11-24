@@ -303,7 +303,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     if (lines.last().isEmpty()) lines.toMutableList().remove(lines.last())
     for (line in lines) {
         line.trim()
-        if (line.isEmpty()) {
+        if (line.isEmpty() || line.matches(Regex("\\s+"))) {
             if (k == 0) continue
             writer.write("</p><p>")
             k = 0
