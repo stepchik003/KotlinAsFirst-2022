@@ -299,10 +299,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var flag3 = 0
     var generalFlag = 0
     var k = 0
-    val lines = File(inputName).readLines()
+    val lines = File(inputName).readLines().toMutableList()
     if (lines.isNotEmpty()) {
-        while (lines.last().isEmpty() || lines.last().matches(Regex("\\s+"))) {
-            lines.toMutableList().remove(lines.last())
+        if (lines.last().isEmpty() || lines.last().matches(Regex("\\s+"))) {
+            lines.remove(lines.last())
         }
     }
     for (line in lines) {
