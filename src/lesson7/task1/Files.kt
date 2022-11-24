@@ -299,7 +299,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var flag3 = 0
     var generalFlag = 0
     var k = 0
-    for (line in File(inputName).readLines()) {
+    val lines = File(inputName).readLines()
+    if (lines.last().isEmpty()) lines.toMutableList().remove(lines.last())
+    for (line in lines) {
         line.trim()
         if (line.isEmpty()) {
             if (k == 0) continue
@@ -365,6 +367,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         }
     }
+
     writer.write("</p></body></html>")
     writer.close()
 }
