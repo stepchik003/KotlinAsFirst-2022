@@ -300,9 +300,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var generalFlag = 0
     var k = 0
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty() && k != 0) {
-            writer.write("</p><p>")
-            k = 0
+        if (line.isEmpty()) {
+            if (k != 0) writer.write("</p><p>")
+            else k = 0
         } else {
             k = 1
             val words = line.split(" ")
