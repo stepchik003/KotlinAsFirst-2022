@@ -4,6 +4,7 @@ package lesson7.task1
 
 import java.io.File
 import java.util.*
+import kotlin.NoSuchElementException
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -300,75 +301,79 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var generalFlag = 0
     var k = 0
     val lines = File(inputName).readLines().toMutableList()
-    if (lines.isNotEmpty()) {
-        while (lines.last().isEmpty() || lines.last().matches(Regex("\\s+"))) {
-            lines.removeLast()
-        }
-    }
-    for (line in lines) {
-        if (line.isEmpty() || line.matches(Regex("\\s+"))) {
-            if (k == 0) continue
-            writer.write("</p><p>")
-            k = 0
-        } else {
-            k = 1
-            val words = line.split(" ")
-            for (word in words) {
-                if (!word.contains(Regex("[*~]+"))) {
-                    writer.write("$word ")
-                    continue
-                }
-                var newWord = ""
-                for (i in 0..word.length - 2) {
-                    if (generalFlag == 1) {
-                        generalFlag = 0
-                        continue
-                    } else if (word.substring(i, i + 2) == "~~") {
-                        generalFlag = 1
-                        if (flag3 == 0) {
-                            newWord += "<s>"
-                            flag3 = 1
-                        } else {
-                            newWord += "</s>"
-                            flag3 = 0
-                        }
-                    } else if (word[i] == '*') {
-                        if (word[i + 1] == '*') {
-                            generalFlag = 1
-                            if (flag2 == 0) {
-                                newWord += "<b>"
-                                flag2 = 1
-                            } else {
-                                newWord += "</b>"
-                                flag2 = 0
-                            }
-                        } else {
-                            if (flag1 == 0) {
-                                newWord += "<i>"
-                                flag1 = 1
-                            } else {
-                                newWord += "</i>"
-                                flag1 = 0
-                            }
-                        }
-                    } else {
-                        newWord += word[i]
-                    }
-                }
-                if (word.last() != '*' && word.last() != '~') newWord += word.last()
-                if (word.last() == '*' && generalFlag == 0) {
-                    if (flag1 == 0) {
-                        newWord += "<i>"
-                        flag1 = 1
-                    } else {
-                        newWord += "</i>"
-                        flag1 = 0
-                    }
-                }
-                writer.write("$newWord ")
-                generalFlag = 0
+    try {
+        if (lines.isNotEmpty()) {
+            while (lines.last().isEmpty() || lines.last().matches(Regex("\\s+"))) {
+                lines.removeLast()
             }
         }
+        for (line in lines) {
+            if (line.isEmpty() || line.matches(Regex("\\s+"))) {
+                if (k == 0) continue
+                writer.write("</p><p>")
+                k = 0
+            } else {
+                k = 1
+                val words = line.split(" ")
+                for (word in words) {
+                    if (!word.contains(Regex("[*~]+"))) {
+                        writer.write("$word ")
+                        continue
+                    }
+                    var newWord = ""
+                    for (i in 0..word.length - 2) {
+                        if (generalFlag == 1) {
+                            generalFlag = 0
+                            continue
+                        } else if (word.substring(i, i + 2) == "~~") {
+                            generalFlag = 1
+                            if (flag3 == 0) {
+                                newWord += "<s>"
+                                flag3 = 1
+                            } else {
+                                newWord += "</s>"
+                                flag3 = 0
+                            }
+                        } else if (word[i] == '*') {
+                            if (word[i + 1] == '*') {
+                                generalFlag = 1
+                                if (flag2 == 0) {
+                                    newWord += "<b>"
+                                    flag2 = 1
+                                } else {
+                                    newWord += "</b>"
+                                    flag2 = 0
+                                }
+                            } else {
+                                if (flag1 == 0) {
+                                    newWord += "<i>"
+                                    flag1 = 1
+                                } else {
+                                    newWord += "</i>"
+                                    flag1 = 0
+                                }
+                            }
+                        } else {
+                            newWord += word[i]
+                        }
+                    }
+                    if (word.last() != '*' && word.last() != '~') newWord += word.last()
+                    if (word.last() == '*' && generalFlag == 0) {
+                        if (flag1 == 0) {
+                            newWord += "<i>"
+                            flag1 = 1
+                        } else {
+                            newWord += "</i>"
+                            flag1 = 0
+                        }
+                    }
+                    writer.write("$newWord ")
+                    generalFlag = 0
+                }
+            }
+        }
+    } catch (e: NoSuchElementException) {
+
     }
 
     writer.write("</p></body></html>")
