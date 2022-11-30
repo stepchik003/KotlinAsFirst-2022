@@ -65,16 +65,16 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()) {
-        if (line.isEmpty()) {
-            writer.write("\n")
-        } else {
-            if (line[0] != '_') writer.write(line + "\n")
-            else continue
+    File(outputName).bufferedWriter().use {
+        for (line in File(inputName).readLines()) {
+            if (line.isEmpty()) {
+                it.write("\n")
+            } else {
+                if (!line.startsWith('_')) it.write(line + "\n")
+                else continue
+            }
         }
     }
-    writer.close()
 }
 
 /**
@@ -303,7 +303,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val lines = File(inputName).readLines().toMutableList()
     try {
         if (lines.isNotEmpty()) {
-            while (lines.last().isEmpty() || lines.last().matches(Regex("\\s+"))) {
+            while (lines.last().isEmpty()) {
                 lines.removeLast()
             }
         }
@@ -372,7 +372,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
             }
         }
-    } catch (e: NoSuchElementException) {
+    } catch (_: NoSuchElementException) {
 
     }
 
