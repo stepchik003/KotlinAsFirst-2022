@@ -579,7 +579,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         if (digitNumber(lastNum) == digitNumber(d) && lastNum != 0 && d != 0 && ind >= 1 && lastNum - d != 0) {
             ind--
         }
-        if (i == digitNumber(partly) && lastNum - d == 0 && diff != 0) ind--
+        if (i == digitNumber(partly) && lastNum - d == 0 && diff != 0 && ind >= 1) ind--
         writer.write(" ".repeat(ind) + "-$d")
         if (i == 1) writer.write(" ".repeat(digitNumber(lhv) - digitNumber(d) - fl + 3) + partly)
         writer.write("\n" + " ".repeat(ind) + "-".repeat(digitNumber(d) + 1) + "\n")
