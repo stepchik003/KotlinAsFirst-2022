@@ -565,10 +565,12 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val rem = lhv % rhv
     var ind = 0
     var fl = 1
+    var flg = 0
     while (lastNum >= d * 10 && d != 0) lastNum /= 10
     if (lastNum != lhv || digitNumber(lhv) == digitNumber(d)) {
         writer.write(" ")
         fl = 0
+        flg = 1
     }
     writer.write("$lhv | $rhv\n")
     for (i in 1..digitNumber(partly)) {
@@ -578,7 +580,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         writer.write("\n" + " ".repeat(ind) + "-".repeat(digitNumber(d) + 1) + "\n")
         val diff = lastNum - d
         if (i == digitNumber(partly)) {
-            writer.write(" ".repeat(ind + digitNumber(d)) + rem)
+            //if (i > 2) fl = 1
+            writer.write(" ".repeat(ind + digitNumber(lastNum) - digitNumber(diff) + flg) + rem)
             break
         }
         var diffStr = ""
@@ -587,7 +590,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         lastNum = (diff.toString() + q[c + i - 1]).toInt()
         ind += digitNumber(d) + 1 - digitNumber(diff)
         writer.write(" ".repeat(ind) + diffStr + q[c + i - 1] + "\n")
-        if (i == digitNumber(partly) - 1 && diff != 0) ind--
+        if (i == digitNumber(partly) - 1 && diff != 0 && i > 1) {
+            ind--
+        }
     }
     writer.close()
 }
