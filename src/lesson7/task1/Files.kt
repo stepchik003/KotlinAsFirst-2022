@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
 import java.io.File
 import java.util.*
 import kotlin.NoSuchElementException
@@ -544,6 +545,45 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    writer.write(" $lhv | $rhv\n")
+    val q = lhv.toString()
+    var partly = lhv / rhv
+    val partList = mutableListOf<Int>()
+    if (partly != 0) {
+        while (partly != 0) {
+            partList.add(partly % 10)
+            partly /= 10
+        }
+        partList.reverse()
+    } else {
+        partList.add(0)
+    }
+    partly = lhv / rhv
+    var lastNum = lhv
+    var d = rhv * partList[0]
+    val c = digitNumber(d)
+    var rem = lhv % rhv
+    var ind = 0
+    while (lastNum > d * 10) lastNum /= 10
+    for (i in 1..digitNumber(partly)) {
+        d = rhv * partList[i - 1]
+        writer.write(" ".repeat(ind) + "-$d")
+        if (i == 1) writer.write(" ".repeat(digitNumber(lhv) - digitNumber(d) + 3) + partly)
+        writer.write("\n" + " ".repeat(ind) + "-".repeat(digitNumber(d) + 1) + "\n")
+        var diff = lastNum - d
+        if (i == digitNumber(partly)) {
+            writer.write(" ".repeat(ind + digitNumber(d)) + rem)
+            break
+        }
+        var diffStr = ""
+        diffStr = if (diff == 0) "0"
+        else diff.toString()
+        lastNum = (diff.toString() + q[c + i - 1]).toInt()
+        ind += digitNumber(d) + 1 - digitNumber(diff)
+        writer.write(" ".repeat(ind) + diffStr + q[c + i - 1] + "\n")
+        if (i == digitNumber(partly) - 1 && diff != 0) ind--
+    }
+    writer.close()
 }
 
