@@ -563,15 +563,15 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var lastNum = lhv
     var d = rhv * partList[0]
     val c = digitNumber(d)
-    var rem = lhv % rhv
+    val rem = lhv % rhv
     var ind = 0
-    while (lastNum > d * 10) lastNum /= 10
+    while (lastNum >= d * 10 && d != 0) lastNum /= 10
     for (i in 1..digitNumber(partly)) {
         d = rhv * partList[i - 1]
         writer.write(" ".repeat(ind) + "-$d")
         if (i == 1) writer.write(" ".repeat(digitNumber(lhv) - digitNumber(d) + 3) + partly)
         writer.write("\n" + " ".repeat(ind) + "-".repeat(digitNumber(d) + 1) + "\n")
-        var diff = lastNum - d
+        val diff = lastNum - d
         if (i == digitNumber(partly)) {
             writer.write(" ".repeat(ind + digitNumber(d)) + rem)
             break
@@ -586,4 +586,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     }
     writer.close()
 }
-
+fun main(){
+    var lastNum = 2
+    var d = 20
+    while (lastNum >= d * 10) lastNum /= 10
+    println(lastNum)
+}
