@@ -590,9 +590,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         lastNum = (diff.toString() + q[c + i - 1]).toInt()
         ind += digitNumber(d) + 1 - digitNumber(diff)
         writer.write(" ".repeat(ind) + diffStr + q[c + i - 1] + "\n")
-        if (i == digitNumber(partly) - 1 && diff != 0 && i > 1) {
-            ind--
-        }
+        if (i == digitNumber(partly) - 1 && diff != 0) ind--
     }
     writer.close()
 }
