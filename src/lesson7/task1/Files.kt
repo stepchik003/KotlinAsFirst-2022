@@ -582,13 +582,18 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         if (i == digitNumber(partly) && lastNum - d == 0 && diff != 0 && ind >= 1 && digitNumber(lastNum) != digitNumber(
                 d
             )
-        ) ind--
-        writer.write(" ".repeat(ind) + "-$d")
+        ) {
+            ind--
+        }
+        val f = if (digitNumber(lastNum) == digitNumber(d)) 1
+        else 0
+        val thisInd = digitNumber(lastNum) - digitNumber(d) - (1 - f)
+        writer.write(" ".repeat(ind + thisInd) + "-$d")
         if (i == 1) writer.write(" ".repeat(digitNumber(lhv) - digitNumber(d) - fl + 3) + partly)
-        writer.write("\n" + " ".repeat(ind) + "-".repeat(digitNumber(d) + 1) + "\n")
+        writer.write("\n" + " ".repeat(ind) + "-".repeat(digitNumber(lastNum) + f) + "\n")
         diff = lastNum - d
         if (i == digitNumber(partly)) {
-            //if (i > 2) fl = 1
+            if (d == 0 && ind >= 1) ind--
             writer.write(" ".repeat(ind + digitNumber(lastNum) - digitNumber(diff) + flg) + rem)
             break
         }
