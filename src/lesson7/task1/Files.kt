@@ -6,6 +6,8 @@ import lesson3.task1.digitNumber
 import java.io.File
 import java.util.*
 import kotlin.NoSuchElementException
+import kotlin.math.max
+import kotlin.math.min
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -558,6 +560,60 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     } else {
         partList.add(0)
     }
+    var d = rhv * partList[0]
+    var fl = 0
+    var lastNum = lhv
+    while (lastNum >= d * 10 && d != 0) lastNum /= 10
+    partly = lhv / rhv
+    var diff = 0
+    var cD = digitNumber(d)
+    var cL = digitNumber(lastNum)
+    var numStr = lastNum.toString()
+    val c = digitNumber(d)
+    var ind = 0
+    var cF = 0
+    if (cL == cD) ind = 1
+    writer.write(" ".repeat(ind) + "$lhv | $rhv\n")
+    for (i in 1..digitNumber(partly)) {
+        d = rhv * partList[i - 1]
+        diff = lastNum - d
+        cL = numStr.length
+        cD = digitNumber(d)
+        cF = digitNumber(diff)
+        val first = cL + ind
+        val firstInd = first - cD - 1
+        val secondInd = first - cF
+        val dash = max(first - firstInd, cL)
+        val halfInd = min(firstInd, secondInd)
+        writer.write(" ".repeat(firstInd) + "-$d")
+        if (i == 1) {
+            writer.write(" ".repeat(digitNumber(lhv) - cD - (1 - ind) + 3) + "$partly")
+            println(ind)
+        }
+        writer.write("\n" + " ".repeat(halfInd) + "-".repeat(dash) + "\n")
+        if (i == digitNumber(partly)) {
+            writer.write(" ".repeat(secondInd) + lhv % rhv)
+            break
+        }
+        ind = secondInd
+        numStr = (diff.toString() + q[c + i - 1])
+        lastNum = numStr.toInt()
+        writer.write(" ".repeat(secondInd) + numStr + "\n")
+    }
+    writer.close()
+    /*val writer = File(outputName).bufferedWriter()
+    val q = lhv.toString()
+    var partly = lhv / rhv
+    val partList = mutableListOf<Int>()
+    if (partly != 0) {
+        while (partly != 0) {
+            partList.add(partly % 10)
+            partly /= 10
+        }
+        partList.reverse()
+    } else {
+        partList.add(0)
+    }
     partly = lhv / rhv
     var lastNum = lhv
     var d = rhv * partList[0]
@@ -573,6 +629,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         flg = 1
     }
     var diff = 1
+    var numStr = lastNum.toString()
     writer.write("$lhv | $rhv\n")
     for (i in 1..digitNumber(partly)) {
         d = rhv * partList[i - 1]
@@ -592,19 +649,22 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         if (i == 1) writer.write(" ".repeat(digitNumber(lhv) - digitNumber(d) - fl + 3) + partly)
         writer.write("\n" + " ".repeat(ind) + "-".repeat(digitNumber(lastNum) + f) + "\n")
         diff = lastNum - d
+        if (digitNumber(lastNum) == digitNumber(d)) fl = 1
         if (i == digitNumber(partly)) {
-            if (d == 0 && ind >= 1) ind--
-            writer.write(" ".repeat(ind + digitNumber(lastNum) - digitNumber(diff) + flg) + rem)
+            if ((diff == 0 || d == 0) && ind >= 1) ind--
+            println("$ind $numStr $diff $flg $d")
+            writer.write(" ".repeat(ind + numStr.length + digitNumber(d) - digitNumber(diff) + flg) + rem)
             break
         }
         var diffStr = ""
         diffStr = if (diff == 0) "0"
         else diff.toString()
+        numStr = (diff.toString() + q[c + i - 1])
         lastNum = (diff.toString() + q[c + i - 1]).toInt()
         ind += digitNumber(d) + 1 - digitNumber(diff)
         writer.write(" ".repeat(ind) + diffStr + q[c + i - 1] + "\n")
         //if (digitNumber(lastNum) == digitNumber(d)) ind--
     }
-    writer.close()
+    writer.close()*/
 }
 
