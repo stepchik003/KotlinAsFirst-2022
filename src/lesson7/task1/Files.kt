@@ -545,8 +545,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
-    /*val writer = File(outputName).bufferedWriter()
+    val writer = File(outputName).bufferedWriter()
     val q = lhv.toString()
     var partly = lhv / rhv
     val partList = mutableListOf<Int>()
@@ -606,6 +605,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         writer.write(" ".repeat(ind) + diffStr + q[c + i - 1] + "\n")
         //if (digitNumber(lastNum) == digitNumber(d)) ind--
     }
-    writer.close()*/
+    writer.close()
 }
 
