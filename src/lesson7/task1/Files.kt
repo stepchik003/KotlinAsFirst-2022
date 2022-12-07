@@ -304,7 +304,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var flagOfBold = false
         var flagOfCrossed = false
         var flagOfIndent = false
-        var k = 0
+        var k = 1
         val lines = File(inputName).readLines().toMutableList()
         if (lines.isNotEmpty()) {
             while (lines.last().isEmpty() || lines.last().isBlank()) {
@@ -312,7 +312,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         }
         for (line in lines) {
-            if (line.isEmpty()) {
+            if (line.isEmpty() || line.isBlank()) {
                 if (k == 0) {
                     k = 1
                     continue
