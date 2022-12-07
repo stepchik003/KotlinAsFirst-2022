@@ -346,54 +346,13 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int?, Int> {
     val mapOfList = mutableMapOf<Int, Int>()
-    val newList = list.toMutableList()
-    var a = -1
-    var d = -1
-    list.forEach { if (number - it >= 0) mapOfList[it] = number - it }
-    for ((i, k) in mapOfList) {
-        newList.remove(i)
-        val newSet = newList.toMutableSet()
-        if (k !in newSet) {
-            d = -1
-        } else {
-            d = k
-            a = i
-            break
-        }
-        newList.add(i)
-    }
-    var c = 0
-    if (d != -1) {
-        for (k in list.indices) {
-            if (list[k] == a && c == 0) {
-                a = k
-                c = 1
-                continue
-            }
-            if (list[k] == d) return Pair(a, k)
-        }
+    for (i in list.indices) {
+        if (list[i] in mapOfList.keys) return Pair(mapOfList[list[i]], i)
+        if (number - list[i] !in mapOfList.keys) mapOfList[number - list[i]] = i
     }
     return Pair(-1, -1)
-    /*val mutList = list.toMutableList()
-
-    for (i in list.indices) {
-        d = number - list[i]
-        mutList.remove(list[i])
-        if (d !in mutList.toMutableSet()) {
-            d = -1
-        } else {
-            a = i
-            break
-        }
-    }
-    if (d != -1) {
-        for (k in list.indices) {
-            if (list[k] == d && k != a) return Pair(a, k)
-        }
-    }
-    return Pair(-1, -1)*/
 }
 
 /**

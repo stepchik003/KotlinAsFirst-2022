@@ -73,8 +73,10 @@ fun deleteMarked(inputName: String, outputName: String) {
             if (line.isEmpty()) {
                 it.write("\n")
             } else {
-                if (!line.startsWith('_')) it.write(line + "\n")
-                else continue
+                if (!line.startsWith('_')) {
+                    it.write(line)
+                    it.appendLine()
+                } else continue
             }
         }
     }
@@ -296,64 +298,63 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    writer.write("<html><body><p>")
-    var flag1 = 0
-    var flag2 = 0
-    var flag3 = 0
-    var generalFlag = 0
-    var k = 0
-    val lines = File(inputName).readLines().toMutableList()
-    try {
+    File(outputName).bufferedWriter().use {
+        it.write("<html><body><p>")
+        var flagOfItalics = false
+        var flagOfBold = false
+        var flagOfCrossed = false
+        var flagOfIndent = false
+        var k = 0
+        val lines = File(inputName).readLines().toMutableList()
         if (lines.isNotEmpty()) {
             while (lines.last().isEmpty()) {
                 lines.removeLast()
             }
         }
         for (line in lines) {
-            if (line.isEmpty() || line.matches(Regex("\\s+"))) {
+            if (line.isEmpty() || line.isBlank()) {
                 if (k == 0) continue
-                writer.write("</p><p>")
+                it.write("</p><p>")
                 k = 0
             } else {
                 k = 1
                 val words = line.split(" ")
                 for (word in words) {
                     if (!word.contains(Regex("[*~]+"))) {
-                        writer.write("$word ")
+                        it.write("$word ")
                         continue
                     }
                     var newWord = ""
                     for (i in 0..word.length - 2) {
-                        if (generalFlag == 1) {
-                            generalFlag = 0
+                        if (flagOfIndent) {
+                            flagOfIndent = false
                             continue
                         } else if (word.substring(i, i + 2) == "~~") {
-                            generalFlag = 1
-                            if (flag3 == 0) {
+                            flagOfIndent = true
+                            if (!flagOfCrossed) {
                                 newWord += "<s>"
-                                flag3 = 1
+                                flagOfCrossed = true
                             } else {
                                 newWord += "</s>"
-                                flag3 = 0
+                                flagOfCrossed = false
                             }
                         } else if (word[i] == '*') {
                             if (word[i + 1] == '*') {
-                                generalFlag = 1
-                                if (flag2 == 0) {
+                                flagOfIndent = true
+                                if (!flagOfBold) {
                                     newWord += "<b>"
-                                    flag2 = 1
+                                    flagOfBold = true
                                 } else {
                                     newWord += "</b>"
-                                    flag2 = 0
+                                    flagOfBold = false
                                 }
                             } else {
-                                if (flag1 == 0) {
+                                if (!flagOfItalics) {
                                     newWord += "<i>"
-                                    flag1 = 1
+                                    flagOfItalics = true
                                 } else {
                                     newWord += "</i>"
-                                    flag1 = 0
+                                    flagOfItalics = false
                                 }
                             }
                         } else {
@@ -361,26 +362,24 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         }
                     }
                     if (word.last() != '*' && word.last() != '~') newWord += word.last()
-                    if (word.last() == '*' && generalFlag == 0) {
-                        if (flag1 == 0) {
+                    if (word.last() == '*' && !flagOfIndent) {
+                        if (!flagOfItalics) {
                             newWord += "<i>"
-                            flag1 = 1
+                            flagOfItalics = true
                         } else {
                             newWord += "</i>"
-                            flag1 = 0
+                            flagOfItalics = false
                         }
                     }
-                    writer.write("$newWord ")
-                    generalFlag = 0
+                    it.write("$newWord ")
+                    flagOfIndent = false
                 }
             }
         }
-    } catch (_: NoSuchElementException) {
 
+
+        it.write("</p></body></html>")
     }
-
-    writer.write("</p></body></html>")
-    writer.close()
 }
 
 /**
@@ -547,124 +546,55 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    val q = lhv.toString()
-    var partly = lhv / rhv
-    val partList = mutableListOf<Int>()
-    if (partly != 0) {
-        while (partly != 0) {
-            partList.add(partly % 10)
-            partly /= 10
+    File(outputName).bufferedWriter().use {
+        val q = lhv.toString()
+        var partly = lhv / rhv
+        val partList = mutableListOf<Int>()
+        if (partly != 0) {
+            while (partly != 0) {
+                partList.add(partly % 10)
+                partly /= 10
+            }
+            partList.reverse()
+        } else {
+            partList.add(0)
         }
-        partList.reverse()
-    } else {
-        partList.add(0)
+        var d = rhv * partList[0]
+        var lastNum = lhv
+        while (lastNum >= d * 10 && d != 0) lastNum /= 10
+        partly = lhv / rhv
+        var diff = 0
+        var cD = digitNumber(d)
+        var cL = digitNumber(lastNum)
+        var numStr = lastNum.toString()
+        val c = digitNumber(d)
+        var ind = 0
+        var cF = 0
+        if (cL == cD) ind = 1
+        it.write(" ".repeat(ind) + "$lhv | $rhv\n")
+        for (i in 1..digitNumber(partly)) {
+            d = rhv * partList[i - 1]
+            diff = lastNum - d
+            cL = numStr.length
+            cD = digitNumber(d)
+            cF = digitNumber(diff)
+            val first = cL + ind
+            val firstInd = first - cD - 1
+            val secondInd = first - cF
+            val dash = max(first - firstInd, cL)
+            val halfInd = min(firstInd, secondInd)
+            it.write(" ".repeat(firstInd) + "-$d")
+            if (i == 1) it.write("$partly".padStart(digitNumber(lhv) - cD - (1 - ind) + 3 + digitNumber(partly)))
+            it.write("\n" + " ".repeat(halfInd) + "-".repeat(dash) + "\n")
+            if (i == digitNumber(partly)) {
+                it.write(" ".repeat(secondInd) + lhv % rhv)
+                break
+            }
+            ind = secondInd
+            numStr = (diff.toString() + q[c + i - 1])
+            lastNum = numStr.toInt()
+            it.write(" ".repeat(secondInd) + numStr + "\n")
+        }
     }
-    var d = rhv * partList[0]
-    var fl = 0
-    var lastNum = lhv
-    while (lastNum >= d * 10 && d != 0) lastNum /= 10
-    partly = lhv / rhv
-    var diff = 0
-    var cD = digitNumber(d)
-    var cL = digitNumber(lastNum)
-    var numStr = lastNum.toString()
-    val c = digitNumber(d)
-    var ind = 0
-    var cF = 0
-    if (cL == cD) ind = 1
-    writer.write(" ".repeat(ind) + "$lhv | $rhv\n")
-    for (i in 1..digitNumber(partly)) {
-        d = rhv * partList[i - 1]
-        diff = lastNum - d
-        cL = numStr.length
-        cD = digitNumber(d)
-        cF = digitNumber(diff)
-        val first = cL + ind
-        val firstInd = first - cD - 1
-        val secondInd = first - cF
-        val dash = max(first - firstInd, cL)
-        val halfInd = min(firstInd, secondInd)
-        writer.write(" ".repeat(firstInd) + "-$d")
-        if (i == 1) {
-            writer.write(" ".repeat(digitNumber(lhv) - cD - (1 - ind) + 3) + "$partly")
-            println(ind)
-        }
-        writer.write("\n" + " ".repeat(halfInd) + "-".repeat(dash) + "\n")
-        if (i == digitNumber(partly)) {
-            writer.write(" ".repeat(secondInd) + lhv % rhv)
-            break
-        }
-        ind = secondInd
-        numStr = (diff.toString() + q[c + i - 1])
-        lastNum = numStr.toInt()
-        writer.write(" ".repeat(secondInd) + numStr + "\n")
-    }
-    writer.close()
-    /*val writer = File(outputName).bufferedWriter()
-    val q = lhv.toString()
-    var partly = lhv / rhv
-    val partList = mutableListOf<Int>()
-    if (partly != 0) {
-        while (partly != 0) {
-            partList.add(partly % 10)
-            partly /= 10
-        }
-        partList.reverse()
-    } else {
-        partList.add(0)
-    }
-    partly = lhv / rhv
-    var lastNum = lhv
-    var d = rhv * partList[0]
-    val c = digitNumber(d)
-    val rem = lhv % rhv
-    var ind = 0
-    var fl = 1
-    var flg = 0
-    while (lastNum >= d * 10 && d != 0) lastNum /= 10
-    if (lastNum != lhv || digitNumber(lhv) == digitNumber(d)) {
-        writer.write(" ")
-        fl = 0
-        flg = 1
-    }
-    var diff = 1
-    var numStr = lastNum.toString()
-    writer.write("$lhv | $rhv\n")
-    for (i in 1..digitNumber(partly)) {
-        d = rhv * partList[i - 1]
-        if (digitNumber(lastNum) == digitNumber(d) && lastNum != 0 && d != 0 && ind >= 1
-            && diff != 0
-        ) ind--
-        if (i == digitNumber(partly) && lastNum - d == 0 && diff != 0 && ind >= 1 && digitNumber(lastNum) != digitNumber(
-                d
-            )
-        ) {
-            ind--
-        }
-        val f = if (digitNumber(lastNum) == digitNumber(d)) 1
-        else 0
-        val thisInd = digitNumber(lastNum) - digitNumber(d) - (1 - f)
-        writer.write(" ".repeat(ind + thisInd) + "-$d")
-        if (i == 1) writer.write(" ".repeat(digitNumber(lhv) - digitNumber(d) - fl + 3) + partly)
-        writer.write("\n" + " ".repeat(ind) + "-".repeat(digitNumber(lastNum) + f) + "\n")
-        diff = lastNum - d
-        if (digitNumber(lastNum) == digitNumber(d)) fl = 1
-        if (i == digitNumber(partly)) {
-            if ((diff == 0 || d == 0) && ind >= 1) ind--
-            println("$ind $numStr $diff $flg $d")
-            writer.write(" ".repeat(ind + numStr.length + digitNumber(d) - digitNumber(diff) + flg) + rem)
-            break
-        }
-        var diffStr = ""
-        diffStr = if (diff == 0) "0"
-        else diff.toString()
-        numStr = (diff.toString() + q[c + i - 1])
-        lastNum = (diff.toString() + q[c + i - 1]).toInt()
-        ind += digitNumber(d) + 1 - digitNumber(diff)
-        writer.write(" ".repeat(ind) + diffStr + q[c + i - 1] + "\n")
-        //if (digitNumber(lastNum) == digitNumber(d)) ind--
-    }
-    writer.close()*/
 }
 
