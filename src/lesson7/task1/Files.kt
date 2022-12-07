@@ -311,6 +311,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 lines.removeLast()
             }
         }
+        if (lines.first().isEmpty()) k = 0
         for (line in lines) {
             if (line.isEmpty() || line.isBlank()) {
                 if (k == 0) continue
