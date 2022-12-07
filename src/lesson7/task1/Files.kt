@@ -298,8 +298,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
-    /*File(outputName).bufferedWriter().use {
+    File(outputName).bufferedWriter().use {
         it.write("<html><body><p>")
         var flagOfItalics = false
         var flagOfBold = false
@@ -380,7 +379,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
 
         it.write("</p></body></html>")
-    }*/
+    }
 }
 
 /**
