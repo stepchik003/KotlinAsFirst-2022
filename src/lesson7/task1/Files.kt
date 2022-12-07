@@ -307,7 +307,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var k = 0
         val lines = File(inputName).readLines().toMutableList()
         if (lines.isNotEmpty()) {
-            while (lines.last().isEmpty()) {
+            while (lines.last().isEmpty() || lines.last().isBlank()) {
                 lines.removeLast()
             }
         }
@@ -584,7 +584,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             val dash = max(first - firstInd, cL)
             val halfInd = min(firstInd, secondInd)
             it.write(" ".repeat(firstInd) + "-$d")
-            if (i == 1) it.write("$partly".padStart(digitNumber(lhv) - cD - (1 - ind) + 3 + digitNumber(partly)))
+            if (i == 1) it.write("$partly".padStart(digitNumber(lhv) - cL + 3 + digitNumber(partly)))
             it.write("\n" + " ".repeat(halfInd) + "-".repeat(dash) + "\n")
             if (i == digitNumber(partly)) {
                 it.write(" ".repeat(secondInd) + lhv % rhv)
