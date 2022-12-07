@@ -311,69 +311,71 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 lines.removeLast()
             }
         }
-        if (lines.first().isEmpty()) k = 0
-        for (line in lines) {
-            if (line.isEmpty() || line.isBlank()) {
-                if (k == 0) continue
-                it.write("</p><p>")
-                k = 0
-            } else {
-                k = 1
-                val words = line.split(" ")
-                for (word in words) {
-                    if (!word.contains(Regex("[*~]+"))) {
-                        it.write("$word ")
-                        continue
-                    }
-                    var newWord = ""
-                    for (i in 0..word.length - 2) {
-                        if (flagOfIndent) {
-                            flagOfIndent = false
+        if (lines.isNotEmpty()) {
+            if (lines.first().isEmpty()) k = 0
+            for (line in lines) {
+                if (line.isEmpty() || line.isBlank()) {
+                    if (k == 0) continue
+                    it.write("</p><p>")
+                    k = 0
+                } else {
+                    k = 1
+                    val words = line.split(" ")
+                    for (word in words) {
+                        if (!word.contains(Regex("[*~]+"))) {
+                            it.write("$word ")
                             continue
-                        } else if (word.substring(i, i + 2) == "~~") {
-                            flagOfIndent = true
-                            if (!flagOfCrossed) {
-                                newWord += "<s>"
-                                flagOfCrossed = true
-                            } else {
-                                newWord += "</s>"
-                                flagOfCrossed = false
-                            }
-                        } else if (word[i] == '*') {
-                            if (word[i + 1] == '*') {
+                        }
+                        var newWord = ""
+                        for (i in 0..word.length - 2) {
+                            if (flagOfIndent) {
+                                flagOfIndent = false
+                                continue
+                            } else if (word.substring(i, i + 2) == "~~") {
                                 flagOfIndent = true
-                                if (!flagOfBold) {
-                                    newWord += "<b>"
-                                    flagOfBold = true
+                                if (!flagOfCrossed) {
+                                    newWord += "<s>"
+                                    flagOfCrossed = true
                                 } else {
-                                    newWord += "</b>"
-                                    flagOfBold = false
+                                    newWord += "</s>"
+                                    flagOfCrossed = false
+                                }
+                            } else if (word[i] == '*') {
+                                if (word[i + 1] == '*') {
+                                    flagOfIndent = true
+                                    if (!flagOfBold) {
+                                        newWord += "<b>"
+                                        flagOfBold = true
+                                    } else {
+                                        newWord += "</b>"
+                                        flagOfBold = false
+                                    }
+                                } else {
+                                    if (!flagOfItalics) {
+                                        newWord += "<i>"
+                                        flagOfItalics = true
+                                    } else {
+                                        newWord += "</i>"
+                                        flagOfItalics = false
+                                    }
                                 }
                             } else {
-                                if (!flagOfItalics) {
-                                    newWord += "<i>"
-                                    flagOfItalics = true
-                                } else {
-                                    newWord += "</i>"
-                                    flagOfItalics = false
-                                }
+                                newWord += word[i]
                             }
-                        } else {
-                            newWord += word[i]
                         }
-                    }
-                    if (word.last() != '*' && word.last() != '~') newWord += word.last()
-                    if (word.last() == '*' && !flagOfIndent) {
-                        if (!flagOfItalics) {
-                            newWord += "<i>"
-                            flagOfItalics = true
-                        } else {
-                            newWord += "</i>"
-                            flagOfItalics = false
+                        if (word.last() != '*' && word.last() != '~') newWord += word.last()
+                        if (word.last() == '*' && !flagOfIndent) {
+                            if (!flagOfItalics) {
+                                newWord += "<i>"
+                                flagOfItalics = true
+                            } else {
+                                newWord += "</i>"
+                                flagOfItalics = false
+                            }
                         }
+                        it.write("$newWord ")
+                        flagOfIndent = false
                     }
-                    it.write("$newWord ")
-                    flagOfIndent = false
                 }
             }
         }
