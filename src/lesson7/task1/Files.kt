@@ -307,7 +307,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var k = 1
         val lines = File(inputName).readLines().toMutableList()
         if (lines.isNotEmpty()) {
-            while (lines.last().isEmpty() || lines.last().isBlank()) {
+            while ((lines.last().isEmpty() || lines.last().isBlank()) && lines.isNotEmpty()) {
                 lines.removeLast()
             }
         }
