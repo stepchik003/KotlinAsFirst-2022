@@ -314,7 +314,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (lines.isNotEmpty()) {
             if (lines.first().isEmpty()) k = 0
             for (line in lines) {
-                if (line.isEmpty() || line.isBlank()) {
+                if (line.isBlank()) {
                     if (k == 0) continue
                     it.write("</p><p>")
                     k = 0
