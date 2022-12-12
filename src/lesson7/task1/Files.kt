@@ -71,11 +71,10 @@ fun deleteMarked(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         for (line in File(inputName).readLines()) {
             if (line.isEmpty()) {
-                it.write("\n")
+                it.appendLine()
             } else {
                 if (!line.startsWith('_')) {
-                    it.write(line)
-                    it.appendLine()
+                    it.appendLine(line)
                 } else continue
             }
         }
@@ -300,26 +299,24 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write("<html><body><p>")
-        var flagOfItalics = false
-        var flagOfBold = false
-        var flagOfCrossed = false
-        var flagOfIndent = false
-        var k = 1
+        var openedOfItalics = false
+        var openedOfBold = false
+        var openedOfCrossed = false
+        var openedOfRepeat = false
+        var openedOfIndent = true
         val lines = File(inputName).readLines().toMutableList()
-        if (lines.isNotEmpty()) {
-            while ((lines.last().isEmpty() || lines.last().isBlank()) && lines.isNotEmpty()) {
-                lines.removeLast()
-            }
+        while ((lines.last().isEmpty() || lines.last().isBlank()) && lines.isNotEmpty()) {
+            lines.removeLast()
         }
         if (lines.isNotEmpty()) {
-            if (lines.first().isEmpty()) k = 0
+            if (lines.first().isEmpty()) openedOfIndent = false
             for (line in lines) {
                 if (line.isBlank()) {
-                    if (k == 0) continue
+                    if (!openedOfIndent) continue
                     it.write("</p><p>")
-                    k = 0
+                    openedOfIndent = false
                 } else {
-                    k = 1
+                    openedOfIndent = true
                     val words = line.split(" ")
                     for (word in words) {
                         if (!word.contains(Regex("[*~]+"))) {
@@ -328,35 +325,35 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         }
                         var newWord = ""
                         for (i in 0..word.length - 2) {
-                            if (flagOfIndent) {
-                                flagOfIndent = false
+                            if (openedOfRepeat) {
+                                openedOfRepeat = false
                                 continue
                             } else if (word.substring(i, i + 2) == "~~") {
-                                flagOfIndent = true
-                                if (!flagOfCrossed) {
+                                openedOfRepeat = true
+                                if (!openedOfCrossed) {
                                     newWord += "<s>"
-                                    flagOfCrossed = true
+                                    openedOfCrossed = true
                                 } else {
                                     newWord += "</s>"
-                                    flagOfCrossed = false
+                                    openedOfCrossed = false
                                 }
                             } else if (word[i] == '*') {
                                 if (word[i + 1] == '*') {
-                                    flagOfIndent = true
-                                    if (!flagOfBold) {
+                                    openedOfRepeat = true
+                                    if (!openedOfBold) {
                                         newWord += "<b>"
-                                        flagOfBold = true
+                                        openedOfBold = true
                                     } else {
                                         newWord += "</b>"
-                                        flagOfBold = false
+                                        openedOfBold = false
                                     }
                                 } else {
-                                    if (!flagOfItalics) {
+                                    if (!openedOfItalics) {
                                         newWord += "<i>"
-                                        flagOfItalics = true
+                                        openedOfItalics = true
                                     } else {
                                         newWord += "</i>"
-                                        flagOfItalics = false
+                                        openedOfItalics = false
                                     }
                                 }
                             } else {
@@ -364,17 +361,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                             }
                         }
                         if (word.last() != '*' && word.last() != '~') newWord += word.last()
-                        if (word.last() == '*' && !flagOfIndent) {
-                            if (!flagOfItalics) {
+                        if (word.last() == '*' && !openedOfRepeat) {
+                            if (!openedOfItalics) {
                                 newWord += "<i>"
-                                flagOfItalics = true
+                                openedOfItalics = true
                             } else {
                                 newWord += "</i>"
-                                flagOfItalics = false
+                                openedOfItalics = false
                             }
                         }
                         it.write("$newWord ")
-                        flagOfIndent = false
+                        openedOfRepeat = false
                     }
                 }
             }
@@ -586,17 +583,17 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             val secondInd = first - cF
             val dash = max(first - firstInd, cL)
             val halfInd = min(firstInd, secondInd)
-            it.write(" ".repeat(firstInd) + "-$d")
+            it.write("-$d".padStart(firstInd + cD + 1))
             if (i == 1) it.write("$partly".padStart(digitNumber(lhv) - cL + 3 + digitNumber(partly)))
-            it.write("\n" + " ".repeat(halfInd) + "-".repeat(dash) + "\n")
+            it.appendLine("\n" + " ".repeat(halfInd) + "-".repeat(dash))
             if (i == digitNumber(partly)) {
-                it.write(" ".repeat(secondInd) + lhv % rhv)
+                it.write("${lhv % rhv}".padStart(secondInd + digitNumber(lhv % rhv)))
                 break
             }
             ind = secondInd
             numStr = (diff.toString() + q[c + i - 1])
             lastNum = numStr.toInt()
-            it.write(" ".repeat(secondInd) + numStr + "\n")
+            it.appendLine(numStr.padStart(secondInd + numStr.length))
         }
     }
 }
