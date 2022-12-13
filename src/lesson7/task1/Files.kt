@@ -299,24 +299,24 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write("<html><body><p>")
-        var openedOfItalics = false
-        var openedOfBold = false
-        var openedOfCrossed = false
-        var openedOfRepeat = false
-        var openedOfIndent = true
+        var openedItalics = false
+        var openedBold = false
+        var openedCrossed = false
+        var openedRepeat = false
+        var openedIndent = true
         val lines = File(inputName).readLines().toMutableList()
         while ((lines.last().isEmpty() || lines.last().isBlank()) && lines.isNotEmpty()) {
             lines.removeLast()
         }
         if (lines.isNotEmpty()) {
-            if (lines.first().isEmpty()) openedOfIndent = false
+            if (lines.first().isEmpty()) openedIndent = false
             for (line in lines) {
                 if (line.isBlank()) {
-                    if (!openedOfIndent) continue
+                    if (!openedIndent) continue
                     it.write("</p><p>")
-                    openedOfIndent = false
+                    openedIndent = false
                 } else {
-                    openedOfIndent = true
+                    openedIndent = true
                     val words = line.split(" ")
                     for (word in words) {
                         if (!word.contains(Regex("[*~]+"))) {
@@ -325,35 +325,35 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         }
                         var newWord = ""
                         for (i in 0..word.length - 2) {
-                            if (openedOfRepeat) {
-                                openedOfRepeat = false
+                            if (openedRepeat) {
+                                openedRepeat = false
                                 continue
                             } else if (word.substring(i, i + 2) == "~~") {
-                                openedOfRepeat = true
-                                if (!openedOfCrossed) {
+                                openedRepeat = true
+                                if (!openedCrossed) {
                                     newWord += "<s>"
-                                    openedOfCrossed = true
+                                    openedCrossed = true
                                 } else {
                                     newWord += "</s>"
-                                    openedOfCrossed = false
+                                    openedCrossed = false
                                 }
                             } else if (word[i] == '*') {
                                 if (word[i + 1] == '*') {
-                                    openedOfRepeat = true
-                                    if (!openedOfBold) {
+                                    openedRepeat = true
+                                    if (!openedBold) {
                                         newWord += "<b>"
-                                        openedOfBold = true
+                                        openedBold = true
                                     } else {
                                         newWord += "</b>"
-                                        openedOfBold = false
+                                        openedBold = false
                                     }
                                 } else {
-                                    if (!openedOfItalics) {
+                                    if (!openedItalics) {
                                         newWord += "<i>"
-                                        openedOfItalics = true
+                                        openedItalics = true
                                     } else {
                                         newWord += "</i>"
-                                        openedOfItalics = false
+                                        openedItalics = false
                                     }
                                 }
                             } else {
@@ -361,17 +361,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                             }
                         }
                         if (word.last() != '*' && word.last() != '~') newWord += word.last()
-                        if (word.last() == '*' && !openedOfRepeat) {
-                            if (!openedOfItalics) {
+                        if (word.last() == '*' && !openedRepeat) {
+                            if (!openedItalics) {
                                 newWord += "<i>"
-                                openedOfItalics = true
+                                openedItalics = true
                             } else {
                                 newWord += "</i>"
-                                openedOfItalics = false
+                                openedItalics = false
                             }
                         }
                         it.write("$newWord ")
-                        openedOfRepeat = false
+                        openedRepeat = false
                     }
                 }
             }
@@ -571,7 +571,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var ind = 0
         var cF = 0
         if (cL == cD) ind = 1
-        it.write(" ".repeat(ind) + "$lhv | $rhv\n")
+        it.appendLine("$lhv | $rhv".padStart(ind + digitNumber(lhv) + digitNumber(rhv) + 3))
         for (i in 1..digitNumber(partly)) {
             d = rhv * partList[i - 1]
             diff = lastNum - d
@@ -585,7 +585,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             val halfInd = min(firstInd, secondInd)
             it.write("-$d".padStart(firstInd + cD + 1))
             if (i == 1) it.write("$partly".padStart(digitNumber(lhv) - cL + 3 + digitNumber(partly)))
-            it.appendLine("\n" + " ".repeat(halfInd) + "-".repeat(dash))
+            it.appendLine("\n" + "-".repeat(dash).padStart(halfInd + dash))
             if (i == digitNumber(partly)) {
                 it.write("${lhv % rhv}".padStart(secondInd + digitNumber(lhv % rhv)))
                 break
