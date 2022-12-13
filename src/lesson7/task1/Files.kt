@@ -309,7 +309,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             lines.removeLast()
         }
         if (lines.isNotEmpty()) {
-            if (lines.first().isEmpty()) openedIndent = false
+            if (lines.first().isBlank()) openedIndent = false
             for (line in lines) {
                 if (line.isBlank()) {
                     if (!openedIndent) continue
