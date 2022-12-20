@@ -343,16 +343,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                     if (!lastOpened && openedBold && openedItalics && word[i + 2] == '*') {
                                         newWord += "</i>"
                                         openedItalics = false
-                                    }
-                                    openedRepeat = true
-                                    if (!openedBold) {
+                                    } else if (!openedBold) {
                                         newWord += "<b>"
                                         openedBold = true
                                         lastOpened = true
+                                        openedRepeat = true
                                     } else {
                                         newWord += "</b>"
                                         openedBold = false
                                         lastOpened = false
+                                        openedRepeat = true
                                     }
                                 } else {
                                     if (!openedItalics) {
