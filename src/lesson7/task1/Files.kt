@@ -304,8 +304,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var openedCrossed = false
         var openedRepeat = false
         var openedIndent = true
+        var lastOpened = false
         val lines = File(inputName).readLines().toMutableList()
-        while ((lines.last().isEmpty() || lines.last().isBlank()) && lines.isNotEmpty()) {
+        while (lines.isNotEmpty() && lines.last().isBlank()) {
             lines.removeLast()
         }
         if (lines.isNotEmpty()) {
@@ -339,18 +340,25 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                                 }
                             } else if (word[i] == '*') {
                                 if (word[i + 1] == '*') {
+                                    if (!lastOpened && openedBold && openedItalics && word[i + 2] == '*') {
+                                        newWord += "</i>"
+                                        openedItalics = false
+                                    }
                                     openedRepeat = true
                                     if (!openedBold) {
                                         newWord += "<b>"
                                         openedBold = true
+                                        lastOpened = true
                                     } else {
                                         newWord += "</b>"
                                         openedBold = false
+                                        lastOpened = false
                                     }
                                 } else {
                                     if (!openedItalics) {
                                         newWord += "<i>"
                                         openedItalics = true
+                                        lastOpened = false
                                     } else {
                                         newWord += "</i>"
                                         openedItalics = false
