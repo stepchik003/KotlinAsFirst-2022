@@ -19,6 +19,7 @@ package lesson12.task1
  */
 class PhoneBook {
     private var phoneBook = mutableMapOf<String, MutableSet<String>>()
+    private var phoneToName = mutableMapOf<String, String>()
 
     /**
      * Добавить человека.
@@ -53,10 +54,9 @@ class PhoneBook {
      * либо такой номер телефона зарегистрирован за другим человеком.
      */
     fun addPhone(name: String, phone: String): Boolean {
-        phoneBook.values.forEach {
-            it.forEach { if (it == phone || name !in phoneBook.keys) return false }
-        }
+        if (name !in phoneBook.keys || phone in phoneToName.keys) return false
         phoneBook[name]?.add(phone)
+        phoneToName[phone] = name
         return true
     }
 
@@ -88,12 +88,7 @@ class PhoneBook {
      * Вернуть имя человека по заданному номеру телефона.
      * Если такого номера нет в книге, вернуть null.
      */
-    fun humanByPhone(phone: String): String? {
-        for ((key, value) in phoneBook) {
-            value.forEach { if (it == phone) return key }
-        }
-        return null
-    }
+    fun humanByPhone(phone: String): String? = phoneToName[phone]
 
     /**
      * Две телефонные книги равны, если в них хранится одинаковый набор людей,
@@ -105,10 +100,7 @@ class PhoneBook {
         if (other !is PhoneBook) return false
         var pB1 = phoneBook
         var pB2 = other.phoneBook
-        for ((key, value) in pB1) {
-            if (!(key in pB2 && value == pB2[key])) return false
-        }
-        return true
+        return pB1 == pB2
     }
 
     override fun hashCode(): Int = phoneBook.hashCode()
